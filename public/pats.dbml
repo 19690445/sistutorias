@@ -1,0 +1,13 @@
+Table pat {
+    id int [pk, increment] // Primary key
+    tutores_id int [ref: > tutores.id] // Relación con el tutor
+    grupo_id int [ref: > grupos.id] // Relación con el grupo
+    periodo_id int [ref: > periodos.id] // Relación con el periodo
+    actividad varchar(150) // Nombre o título de la actividad
+    responsable varchar(100) // Responsable de la actividad (puede ser el tutor o un estudiante)
+    semana_planeada varchar(50) // Semana planeada
+    semana_real varchar(50) // Semana en la que realmente se realizó
+    estado enum('pendiente','en_proceso','completado') default 'pendiente' // Estado de la actividad
+    created_at timestamp
+    updated_at timestamp
+}

@@ -1,0 +1,13 @@
+Table actividaderivada {
+    id int [pk, increment] // Primary key
+    diagnostico_id int [ref: > diagnosticos.id] // Relación con el diagnóstico
+    sesion varchar(50) // Número o código de la sesión
+    creacion_act date // Fecha de creación de la actividad
+    eje varchar(100) // Eje temático o área de enfoque
+    tema varchar(150) // Tema específico de la actividad
+    actividades text // Descripción de las actividades a realizar
+    materiales_usar text // Materiales necesarios
+    responsable_id int [ref: > tutores.id] // Tutor responsable de la actividad
+    created_at timestamp
+    updated_at timestamp
+}

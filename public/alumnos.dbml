@@ -1,0 +1,14 @@
+Table alumnos {
+    id int [pk, increment] // Primary key
+    nombre varchar
+    password varchar
+    correo_electronico varchar
+    creacion varchar
+    actualizacion varchar
+    foto_perfil varchar // Ruta o nombre de imagen
+    estado ENUM('activo', 'inactivo') // Controla acceso del usuario
+    rol ENUM('admin', 'coordinador', 'tutor', 'tutorado')
+    ultimo_acceso datetime // Última vez que inició sesión
+    fecha_creacion datetime
+    fecha_actualizacion datetime
+} 

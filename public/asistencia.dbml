@@ -1,0 +1,12 @@
+Table asistencia {
+    id int [pk, increment] // Primary key
+    tutores_id int [ref: > tutores.id] // Relación con el tutor
+    tutorado_id int [ref: > tutorados.id] // Relación con el tutorado
+    periodo_id int [ref: > periodos.id] // Relación con el periodo
+    sesion int // Número o código de sesión
+    fecha date // Fecha de la asistencia
+    estado enum('si','no','np','justificado') default 'si'
+    observaciones text // Comentarios adicionales
+    created_at timestamp
+    updated_at timestamp
+}

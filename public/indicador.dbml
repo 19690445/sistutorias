@@ -1,0 +1,14 @@
+Table indicadores {
+    id int [pk, increment] // Primary key
+    diagnostico_id int [ref: > diagnosticos.id] // Relación con el diagnóstico
+    causa text // Descripción de la causa
+    clave_indicadora varchar(50) // Código o clave del indicador
+    descripcion text // Explicación detallada del indicador
+    meta varchar(100) // Meta o objetivo a alcanzar
+    fecha_registro date // Fecha de registro del indicador
+    responsable_id int [ref: > tutores.id] // Tutor o responsable del seguimiento
+    estado enum('pendiente','en_proceso','completado') default 'pendiente'
+    notas text // Comentarios adicionales
+    created_at timestamp
+    updated_at timestamp
+}

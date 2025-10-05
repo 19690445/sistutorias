@@ -1,0 +1,11 @@
+Table individual {
+    id int [pk, increment] // Primary key
+    periodo_id int [ref: > periodos.id] // Relación con el periodo académico
+    tutores_id int [ref: > tutores.id] // Tutor responsable
+    tutorado_id int [ref: > tutorados.id] // Alumno atendido
+    requiere_canalizacion enum('si','no') default 'no' // Si requiere derivación
+    motivo text // Razón por la que requiere tutoría individual
+    estado enum('pendiente','en_proceso','completado') default 'pendiente'
+    created_at timestamp
+    updated_at timestamp
+}

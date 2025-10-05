@@ -1,0 +1,15 @@
+Table tutores {
+    id int [pk, increment] // Primary key
+    alumnos_id int [ref: > alumnos.id] // Relación con la tabla alumnos
+    nombre varchar
+    apellido varchar
+    rfc varchar
+    correo_electronico varchar [unique]
+    telefono varchar
+    departamento varchar
+    grupo_id int [ref: > grupos.id] // Llave foránea
+    periodo_id int [ref: > periodos.id] // Llave foránea
+    estatus ENUM('activo', 'inactivo') // Estado del tutor
+    fecha_registro datetime
+    fecha_actualizacion datetime
+}
