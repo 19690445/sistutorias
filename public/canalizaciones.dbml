@@ -1,0 +1,14 @@
+Table canalizaciones {
+    id int [pk, increment] // Primary key
+    individuales_id int [ref: > individuales.id]
+    tipo_atencion enum('servicios psicologicos','servicios de salud','adicciones','beca manutencion','beca transporte','beca alimentacion','asesoria academica','asesoria procesos academicos/administrativos','aptitudes sobresalientes') // Tipo de atención requerida
+    causa_problema text 
+    acciones_sugeridas text 
+    primera_sesion_propuesta date
+    primera_sesion_real date 
+    seguimiento_tutor text 
+    estado enum('pendiente','en_proceso','finalizado') default 'pendiente'
+    observaciones text 
+    created_at timestamp
+    updated_at timestamp
+}

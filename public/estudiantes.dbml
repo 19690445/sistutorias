@@ -1,26 +1,22 @@
 Table estudiantes {
     id int [pk, increment] // Primary key
-    alumnos_id int // Relación con la tabla alumnos
-    grupo_id int // Relación con el grupo académico
-    tutores_id int // Relación con el tutor asignado
-    periodo_id int // Relación con el periodo académico
-    matricula varchar(20) // Clave única del alumno
-    nombre varchar(100) // Nombre(s)
-    apellido_paterno varchar(100)
-    apellido_materno varchar(100)
-    fecha_nacimiento date // Fecha de nacimiento
-    genero enum('masculino', 'femenino', 'otro') // Género
-    correo_institucional varchar(150) // Correo escolar
-    telefono varchar(20) // Teléfono de contacto
-    direccion text // Domicilio
-    carrera varchar(100) // Carrera o programa
-    semestre int // Número de semestre actual
-    promedio decimal(4,2) // Promedio general
-    estatus enum('activo', 'baja_temporal', 'baja_definitiva', 'egresado') // Estado académico
-    fecha_ingreso date // Cuándo ingresó
-    fecha_egreso date // Cuándo terminó (opcional)
-    
-    observaciones text // Comentarios del tutor o coordinador
+    users_id int [ref: > users.id] 
+    //datos generales 
+    matricula varchar(20)
+    nombre varchar(100) 
+    apellidos varchar(100)
+    curp varchar
+    fecha_nacimiento date
+    genero enum('masculino', 'femenino', 'otro')
+    //informacion de contacto
+    correo_institucional varchar(150)
+    telefono_celular varchar(20) 
+    domicilio text 
+    carrera varchar(100) 
+    semestre int 
+    estado enum('activo', 'baja_temporal', 'baja_definitiva', 'egresado')
+    fecha_ingreso date
+    fecha_egreso date
     created_at timestamp
     updated_at timestamp
 }

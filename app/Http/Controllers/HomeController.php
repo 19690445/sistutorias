@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -17,12 +16,28 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * Show the application dashboard or redirect by role.
      */
     public function index()
     {
-        return view('home');
+        $user = Auth::user();
+
+        // Verificar que tenga rol asignado
+        if (!$user->rol) {
+            return redirect()->route('home')->with('error', 'Tu cuenta no tiene un rol asignado.');
+        }
+
+        // Redirigir según el rol
+        switch ($user->rol->nombre) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'docente':
+                return redirect()->route('docente.dashboard');
+            case 'coordinador':
+                return redirect()->route('coordinador.dashboard');
+            case 'tutorado':
+            default:
+                return view('home'); // Vista general para tutorado
+        }
     }
 }

@@ -63,10 +63,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // Buscar el rol por defecto (tutorado)
+        $tutoradoRole = \App\Models\Role::where('nombre', 'tutorado')->first();
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'rol_id' => $tutoradoRole->id ?? null,
         ]);
     }
+
 }

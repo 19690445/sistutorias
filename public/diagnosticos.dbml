@@ -1,0 +1,14 @@
+Table diagnosticos {
+    id int [pk, increment] // Primary key
+    grupos_id int [ref: > grupos.id] 
+    periodo_id int [ref: > periodo.id] 
+    responsable_id int [ref: > tutores.id]
+    problemarios text 
+    solucion text 
+    objetivos text 
+    fecha_realizacion date 
+    estado enum('pendiente','en_proceso','completado') default 'pendiente'
+    observaciones text 
+    created_at timestamp
+    updated_at timestamp
+}

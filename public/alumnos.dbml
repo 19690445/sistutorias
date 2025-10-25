@@ -6,8 +6,7 @@ Table alumnos {
     creacion varchar
     actualizacion varchar
     foto_perfil varchar // Ruta o nombre de imagen
-    estado ENUM('activo', 'inactivo') // Controla acceso del usuario
-    rol ENUM('admin', 'coordinador', 'tutor', 'tutorado')
+    estado enum ('activo', 'inactivo') // Controla acceso del usuario
     ultimo_acceso datetime // Última vez que inició sesión
     fecha_creacion datetime
     fecha_actualizacion datetime

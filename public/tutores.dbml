@@ -1,15 +1,21 @@
 Table tutores {
     id int [pk, increment] // Primary key
-    alumnos_id int [ref: > alumnos.id] // Relación con la tabla alumnos
+    users_id int [ref: > users.id] //relación con tabla usuarios 
+    //datos generales
     nombre varchar
-    apellido varchar
-    rfc varchar
-    correo_electronico varchar [unique]
+    apellidos varchar
+    curp varchar
+    fecha_nacimiento date
+    sexo enum('masculino', 'femenino', 'otro')
+   //informacion de contacto
+     correo_electronico varchar [unique]
     telefono varchar
     departamento varchar
-    grupo_id int [ref: > grupos.id] // Llave foránea
-    periodo_id int [ref: > periodos.id] // Llave foránea
-    estatus ENUM('activo', 'inactivo') // Estado del tutor
+    //informacion adiccional
+    rfc varchar
+    nivel_estudios varchar
+    descripcion_estudios text
+    estado enum('activo', 'inactivo') // Estado del tutor
     fecha_registro datetime
     fecha_actualizacion datetime
 }

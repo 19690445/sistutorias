@@ -1,21 +1,60 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminTutoradoController;
+use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\TutorController;
+use App\Http\Controllers\TutorDashboardController;
+use App\Http\Controllers\TutoradoController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', fn() => view('welcome'));
+Auth::routes();
+
+/*---------------------
+| TUTORADO
+---------------------*/
+Route::middleware(['auth', 'role:tutorado'])->group(function () {
+    Route::get('/tutorado/dashboard', [TutoradoController::class, 'dashboard'])->name('tutorado.dashboard');
+    Route::post('/tutorado/update', [TutoradoController::class, 'update'])->name('tutorado.update');
 });
 
-Auth::routes();
+/*---------------------
+| ADMIN
+---------------------*/
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
 
-Auth::routes();
+    Route::get('/register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register');
+    Route::post('/register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'store'])->name('register.store');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::resource('users', AdminUserController::class);
+    Route::resource('tutorados', AdminTutoradoController::class);
 
+    Route::get('/configuracion', [ConfiguracionController::class, 'index'])->name('configuracion.index');
+    Route::get('/configuracion/create', [ConfiguracionController::class, 'create'])->name('configuracion.create');
+    Route::post('/configuracion', [ConfiguracionController::class, 'store'])->name('configuracion.store');
+});
 
-//rutas para la configuracion
+/*---------------------
+| DOCENTE
+---------------------*/
+Route::middleware(['auth', 'role:docente'])->group(function () {
+    Route::get('/docente/dashboard', fn() => view('docente.dashboard'))->name('docente.dashboard');
+    Route::get('/tutores', [TutorController::class, 'index'])->name('tutores.index');
+    Route::get('/dashboard/tutor', [TutorDashboardController::class, 'index'])->name('dashboard.tutor');
+});
 
-Route::get('/admin/configuracion', [App\Http\Controllers\ConfiguracionController::class, 'index'])->name('admin.configuracion.index')->middleware('auth');
-Route::get('/admin/configuracion/create', [App\Http\Controllers\ConfiguracionController::class, 'store'])->name('admin.configuracion.store')->middleware('auth');
+/*---------------------
+| COORDINADOR
+---------------------*/
+Route::middleware(['auth', 'role:coordinador'])->prefix('coordinador')->name('coordinador.')->group(function () {
+    Route::get('/dashboard', fn() => view('coordinador.dashboard'))->name('dashboard');
+
+    // ✅ Coordinador puede listar y editar tutorados, pero no crear ni eliminar
+    Route::get('/tutorados', [AdminTutoradoController::class, 'index'])->name('tutorados.index');
+    Route::get('/tutorados/{id}/edit', [AdminTutoradoController::class, 'edit'])->name('tutorados.edit');
+    Route::put('/tutorados/{id}', [AdminTutoradoController::class, 'update'])->name('tutorados.update');
+});

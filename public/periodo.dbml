@@ -1,11 +1,12 @@
 Table periodo {
     id int [pk, increment] // Primary key
-    nombre varchar(50) // Ejemplo: "Enero-Junio", "Agosto-Diciembre"
-    año int // Año del periodo
-    fecha_inicio date // Cuándo inicia el periodo
-    fecha_fin date // Cuándo termina el periodo
-    descripcion text // Información adicional (opcional)
-    estatus enum('activo', 'inactivo', 'finalizado') // Estado del periodo
+    estudiantes_id int [ref: > estudiantes.id]
+    nombre_periodo varchar(50)
+    año_periodo int 
+    fecha_inicio date
+    fecha_fin date
+    descripcion text
+    estado enum('activo', 'inactivo', 'finalizado')
     created_at timestamp
     updated_at timestamp
 }

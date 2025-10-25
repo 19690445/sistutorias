@@ -1,0 +1,16 @@
+Table grupos {
+    id int [pk, increment] // Primary key
+    clave_grupo varchar(20) 
+    nombre_grupo varchar(100) 
+    tutores_id int 
+    periodo_id int 
+    carrera varchar(100)
+    semestre int 
+    aula varchar(50) 
+    horario varchar(100) 
+    capacidad_salon int 
+    modalidad enum('presencial', 'virtual', 'mixta')
+    turno enum('matutino', 'intermedio', 'vespertino') 
+    created_at timestamp
+    updated_at timestamp
+}

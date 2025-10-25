@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Tutorias</b>',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -301,10 +301,46 @@ return [
     'menu' => [
         // Navbar items:
         [
+            'type' => 'sidebar-menu-search',
+            'text' => 'search',
+        ],
+
+           // Dashboards
+        [
+            'text' => 'Dashboard Admin',
+            'url'  => 'admin/dashboard',
+            'icon' => 'fas fa-tachometer-alt',
+            'classes' => 'bd-blue text-white',
+            'can' => 'gestionar-usuarios'
+       ],
+
+        [
             'text' => 'Configuracion',
             'url' => 'admin/configuracion',
             'icon' => 'fas fa-fw fa-cog',
             'classes' => 'bd-blue text-white',
+            'can' => 'cambiar-configuracion'
+        ],
+
+        [
+            'text' => 'Usuarios',
+            'url' => 'admin/users',
+            'icon' => 'fas fa-fw fa-cog',
+            'classes' => 'bd-blue text-white',
+        ],
+        [
+            'text' => 'Tutorados',
+            'url' => 'admin/tutorados/create',
+            'icon' => 'fas fa-fw fa-cog',
+            'classes' => 'bd-blue text-white',
+            'can' => 'gestionar-tutorados'
+        ],
+
+        [
+            'text' => 'ver estudiantes',
+            'url' => 'admin/tutorados',
+            'icon' => 'fas fa-fw fa-cog',
+            'classes' => 'bd-blue text-red',
         ],
 
         [
@@ -317,11 +353,8 @@ return [
             'topnav_right' => true,
         ],
 
+
         // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
         [
             'text' => 'blog',
             'url' => 'admin/blog',

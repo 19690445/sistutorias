@@ -2,31 +2,26 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * Atributos que se pueden asignar masivamente.
      */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'rol_id',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
+     * Atributos que deben estar ocultos en arrays o JSON.
      */
     protected $hidden = [
         'password',
@@ -34,15 +29,34 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Relación con el modelo Role.
+     * Un usuario pertenece a un rol.
      */
-    protected function casts(): array
+    public function role()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Role::class, 'rol_id');
     }
+
+    /**
+     * Verifica si el usuario tiene un rol determinado.
+     */
+    public function hasRole($roles)
+    {
+        $userRole = $this->role?->nombre;
+
+        if (!$userRole) {
+            return false;
+        }
+
+        if (is_array($roles)) {
+            return in_array($userRole, $roles);
+        }
+
+        return $userRole === $roles;
+    }
+    public function user()
+{
+    return $this->belongsTo(User::class, 'users_id'); 
+}
+
 }

@@ -3,38 +3,32 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
+    use \Illuminate\Foundation\Auth\AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
+     * Redirección según el rol después del login.
      */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    protected function authenticated(Request $request, $user)
     {
-        $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
+        // Si no tiene rol asignado
+        if (!$user->role) {
+            Auth::logout();
+            return redirect()->route('login')
+                ->withErrors(['error' => 'Tu usuario no tiene un rol asignado.']);
+        }
+
+        // Redirigir según el rol
+        return match ($user->role->nombre) {
+            'admin'       => redirect()->route('admin.dashboard'),
+            'docente'     => redirect()->route('docente.dashboard'),
+            'coordinador' => redirect()->route('coordinador.dashboard'),
+            'tutorado'    => redirect()->route('tutorado.dashboard'),
+            
+        };
     }
 }
