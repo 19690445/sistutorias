@@ -25,19 +25,17 @@
             <form action="{{ route('admin.tutorados.store') }}" method="POST">
                 @csrf
                 <div class="row">
-                    <!-- Matricula -->
+                   
                     <div class="form-group col-md-4">
                         <label for="matricula">Matrícula</label>
                         <input type="text" name="matricula" class="form-control" value="{{ old('matricula') }}" required>
                     </div>
 
-                    <!-- Nombre -->
                     <div class="form-group col-md-4">
                         <label for="nombre">Nombre</label>
                         <input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}" required>
                     </div>
 
-                    <!-- Apellidos -->
                     <div class="form-group col-md-4">
                         <label for="apellidos">Apellidos</label>
                         <input type="text" name="apellidos" class="form-control" value="{{ old('apellidos') }}" required>
@@ -45,19 +43,19 @@
                 </div>
 
                 <div class="row">
-                    <!-- CURP -->
+                   
                     <div class="form-group col-md-4">
                         <label for="curp">CURP</label>
                         <input type="text" name="curp" class="form-control" value="{{ old('curp') }}">
                     </div>
 
-                    <!-- Fecha de nacimiento -->
+                   
                     <div class="form-group col-md-4">
                         <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                         <input type="date" name="fecha_nacimiento" class="form-control" value="{{ old('fecha_nacimiento') }}">
                     </div>
 
-                    <!-- Género -->
+                 
                     <div class="form-group col-md-4">
                         <label for="genero">Género</label>
                         <select name="genero" class="form-control">
@@ -70,19 +68,19 @@
                 </div>
 
                 <div class="row">
-                    <!-- Correo Institucional -->
+                
                     <div class="form-group col-md-4">
                         <label for="correo_institucional">Correo Institucional</label>
                         <input type="email" name="correo_institucional" class="form-control" value="{{ old('correo_institucional') }}" required>
                     </div>
 
-                    <!-- Teléfono Celular -->
+                   
                     <div class="form-group col-md-4">
                         <label for="telefono_celular">Teléfono Celular</label>
                         <input type="text" name="telefono_celular" class="form-control" value="{{ old('telefono_celular') }}">
                     </div>
 
-                    <!-- Domicilio -->
+                
                     <div class="form-group col-md-4">
                         <label for="domicilio">Domicilio</label>
                         <input type="text" name="domicilio" class="form-control" value="{{ old('domicilio') }}">
@@ -90,19 +88,17 @@
                 </div>
 
                 <div class="row">
-                    <!-- Carrera -->
+                  
                     <div class="form-group col-md-4">
                         <label for="carrera">Carrera</label>
                         <input type="text" name="carrera" class="form-control" value="{{ old('carrera') }}">
                     </div>
 
-                    <!-- Semestre -->
                     <div class="form-group col-md-4">
                         <label for="semestre">Semestre</label>
                         <input type="number" name="semestre" class="form-control" value="{{ old('semestre') }}">
                     </div>
 
-                    <!-- Estado -->
                     <div class="form-group col-md-4">
                         <label for="estado">Estado</label>
                         <select name="estado" class="form-control">
@@ -116,13 +112,13 @@
                 </div>
 
                 <div class="row">
-                    <!-- Fecha de ingreso -->
+                   
                     <div class="form-group col-md-6">
                         <label for="fecha_ingreso">Fecha de Ingreso</label>
                         <input type="date" name="fecha_ingreso" class="form-control" value="{{ old('fecha_ingreso') }}">
                     </div>
 
-                    <!-- Fecha de egreso -->
+                   
                     <div class="form-group col-md-6">
                         <label for="fecha_egreso">Fecha de Egreso</label>
                         <input type="date" name="fecha_egreso" class="form-control" value="{{ old('fecha_egreso') }}">

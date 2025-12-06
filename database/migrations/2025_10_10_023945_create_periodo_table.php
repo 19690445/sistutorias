@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('periodo', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('estudiantes_id')->constrained('estudiantes')->onDelete('cascade');
+            $table->foreignId('estudiantes_id')->nullable()->constrained('estudiantes')->onDelete('cascade');
             $table->string('nombre_periodo', 50);
             $table->integer('año_periodo');
             $table->date('fecha_inicio');

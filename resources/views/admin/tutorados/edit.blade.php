@@ -11,7 +11,6 @@
         <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
             <h3 class="card-title"><i class="fas fa-user-edit"></i> Modificar Información</h3>
 
-            {{-- Botón de regreso dinámico según el rol --}}
             <a href="{{ auth()->user()->role->nombre === 'admin' 
                 ? route('admin.tutorados.index') 
                 : route('coordinador.tutorados.index') }}" 
@@ -21,7 +20,7 @@
         </div>
 
         <div class="card-body">
-            {{-- Acción dinámica según el rol --}}
+       
             <form action="{{ auth()->user()->role->nombre === 'admin' 
                 ? route('admin.tutorados.update', $tutorado->id) 
                 : route('coordinador.tutorados.update', $tutorado->id) }}" 

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('asistencias', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tutores_id')->constrained('tutores')->onDelete('cascade');     
-            $table->foreignId('estudiantes_id')->constrained('estudiantes')->onDelete('cascade');     
+            $table->foreignId('estudiantes_id')->constrained('estudiantes')->onDelete('cascade'); 
+            $table->foreignId('grupo_id')->constrained('grupos')->onDelete('cascade');    
             $table->foreignId('periodo_id')->constrained('periodo')->onDelete('cascade');
             $table->integer('sesion');
             $table->date('fecha');
-            $table->enum('estado', ['si', 'no', 'np', 'justificado'])
-                  ->default('si');
+            $table->enum('estado', ['si', 'no', 'np', 'justificado'])->default('si');
             $table->text('observaciones')->nullable();
             $table->timestamps();
         });

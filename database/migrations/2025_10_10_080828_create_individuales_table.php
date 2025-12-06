@@ -22,7 +22,6 @@ return new class extends Migration
             $table->enum('estado', ['pendiente', 'en_proceso', 'completado'])
                   ->default('pendiente');
 
-            // ⏱️ Fechas automáticas
             $table->timestamps();
         });
     }

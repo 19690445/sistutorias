@@ -16,7 +16,6 @@ class RedirectIfAuthenticated
         if (Auth::check()) {
             $user = Auth::user();
 
-            // 🔹 Redirigir según el rol del usuario autenticado
             switch ($user->role->nombre ?? null) {
                 case 'admin':
                     return redirect('/admin/dashboard');

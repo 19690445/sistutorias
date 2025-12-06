@@ -13,7 +13,7 @@ class TutoradoController extends Controller
         $user = Auth::user();
         $tutorado = Tutorado::where('users_id', $user->id)->first();
 
-        // Si no existe el tutorado, enviar un mensaje de aviso
+         
         if (!$tutorado) {
             return view('tutorado.dashboard')->with('tutorado', null);
         }

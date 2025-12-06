@@ -22,12 +22,12 @@ class HomeController extends Controller
     {
         $user = Auth::user();
 
-        // Verificar que tenga rol asignado
+        
         if (!$user->rol) {
             return redirect()->route('home')->with('error', 'Tu cuenta no tiene un rol asignado.');
         }
 
-        // Redirigir según el rol
+        
         switch ($user->rol->nombre) {
             case 'admin':
                 return redirect()->route('admin.dashboard');
@@ -37,7 +37,7 @@ class HomeController extends Controller
                 return redirect()->route('coordinador.dashboard');
             case 'tutorado':
             default:
-                return view('home'); // Vista general para tutorado
+                return view('home'); 
         }
     }
 }

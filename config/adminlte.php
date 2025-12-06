@@ -313,36 +313,87 @@ return [
             'classes' => 'bd-blue text-white',
             'can' => 'gestionar-usuarios'
        ],
-
         [
-            'text' => 'Configuracion',
-            'url' => 'admin/configuracion',
-            'icon' => 'fas fa-fw fa-cog',
-            'classes' => 'bd-blue text-white',
-            'can' => 'cambiar-configuracion'
+            'text' => 'Ver Periodos',
+             'url' => 'coordinador/periodos',
+             'icon' => 'fas fa-fw fa-cog',
+             'classes' => 'bd-blue text-white',
+             'can' => 'ver-periodos'
         ],
-
         [
             'text' => 'Usuarios',
             'url' => 'admin/users',
             'icon' => 'fas fa-fw fa-cog',
             'classes' => 'bd-blue text-white',
+            'can' => 'ver-usuarios'
+        ],
+        [
+            'text' => 'Diagnosticos',
+            'url' => 'diagnosticos/create',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'ver-diagnosticos'
+        ],
+        [
+            'text' => 'Canalizaciones',
+            'url' => 'canalizaciones/create',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
         ],
         [
             'text' => 'Tutorados',
             'url' => 'admin/tutorados/create',
-            'icon' => 'fas fa-fw fa-cog',
+            'icon' => 'fas fa-users-line',
             'classes' => 'bd-blue text-white',
             'can' => 'gestionar-tutorados'
         ],
 
         [
-            'text' => 'ver estudiantes',
+            'text' => 'Ver Estudiantes',
             'url' => 'admin/tutorados',
-            'icon' => 'fas fa-fw fa-cog',
-            'classes' => 'bd-blue text-red',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'gestionar-estudiantes'
+        ],
+        
+        [
+            'text' => 'Crear Docente',
+            'url' => 'admin/tutores/create',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'crear-docente'
+        ],
+        [
+            'text' => 'Informacion Docente',
+            'url' => 'tutores',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'ver-informacion'
+        ],
+         [
+            'text' => 'Mi perfil',
+            'url' => 'mi-perfil',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'perfil-docente'
+            
         ],
 
+        [
+            'text' => 'Crear Grupos',
+            'url' => 'grupos',
+            'icon' => 'fas fa-project-diagram',
+            'classes' => 'bd-blue text-white',
+            'can' => 'crear-grupos'
+        ],
+        [
+            'text' => 'Asistencias',
+             'url' => 'asistencias/create',
+             'icon' => 'fas fa-fw fa-cog',
+             'classes' => 'bd-blue text-white',
+             'can' => 'ver-asistencia'
+        ],
+          
         [
             'type' => 'navbar-search',
             'text' => 'search',
@@ -360,78 +411,9 @@ return [
             'url' => 'admin/blog',
             'can' => 'manage-blog',
         ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
-        ],
+        
+        
+
     ],
 
     /*

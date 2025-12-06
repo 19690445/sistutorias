@@ -14,21 +14,21 @@ class AdminUserController extends Controller
         $this->middleware(['auth', 'role:admin']);
     }
 
-    // Mostrar todos los usuarios
+  
     public function index()
     {
         $users = User::with('role')->get();
         return view('admin.users.index', compact('users'));
     }
 
-    // Formulario para crear usuario
+  
     public function create()
     {
         $roles = Role::all();
         return view('admin.users.create', compact('roles'));
     }
 
-    // Guardar usuario
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -48,14 +48,14 @@ class AdminUserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Usuario creado correctamente.');
     }
 
-    // Formulario para editar usuario
+   
     public function edit(User $user)
     {
         $roles = Role::all();
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
-    // Actualizar usuario
+    
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -78,7 +78,7 @@ class AdminUserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente.');
     }
 
-    // Eliminar usuario
+   
     public function destroy(User $user)
     {
         $user->delete();

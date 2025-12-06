@@ -45,13 +45,13 @@
                     <td>{{ $t->semestre }}</td>
                     <td>{{ ucfirst($t->estado) }}</td>
                     <td>
-                        <!-- Botón Editar (admin o coordinador) -->
+                       
                         <a href="{{ route($isAdmin ? 'admin.tutorados.edit' : 'coordinador.tutorados.edit', $t->id) }}" 
                            class="btn btn-warning btn-sm mb-1">
                             <i class="fas fa-edit"></i> Editar
                         </a>
 
-                        <!-- Botón Eliminar (solo admin) -->
+                      
                         @if($isAdmin)
                             <form action="{{ route('admin.tutorados.destroy', $t->id) }}" method="POST" style="display:inline;">
                                 @csrf

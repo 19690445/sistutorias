@@ -9,10 +9,6 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-
-    /**
-     * Atributos que se pueden asignar masivamente.
-     */
     protected $fillable = [
         'name',
         'email',
@@ -20,26 +16,16 @@ class User extends Authenticatable
         'rol_id',
     ];
 
-    /**
-     * Atributos que deben estar ocultos en arrays o JSON.
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Relación con el modelo Role.
-     * Un usuario pertenece a un rol.
-     */
     public function role()
     {
         return $this->belongsTo(Role::class, 'rol_id');
     }
 
-    /**
-     * Verifica si el usuario tiene un rol determinado.
-     */
     public function hasRole($roles)
     {
         $userRole = $this->role?->nombre;

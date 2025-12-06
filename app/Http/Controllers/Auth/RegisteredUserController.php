@@ -13,20 +13,20 @@ class RegisteredUserController extends Controller
 {
     public function __construct()
     {
-        // 🔒 Solo los administradores autenticados pueden acceder
+       
         $this->middleware(['auth', 'role:admin']);
     }
 
     public function create()
     {
-        // 👇 Trae todos los roles disponibles
+        
         $roles = Role::all();
         return view('auth.register', compact('roles'));
     }
 
     public function store(Request $request)
     {
-        // 👇 Valida la información del nuevo usuario
+        
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -34,7 +34,7 @@ class RegisteredUserController extends Controller
             'rol_id' => ['required', 'exists:roles,id'],
         ]);
 
-        // 👇 Crea el usuario con el rol asignado
+        
         User::create([
             'name' => $request->name,
             'email' => $request->email,
