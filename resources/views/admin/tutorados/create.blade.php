@@ -3,13 +3,13 @@
 @section('title', 'Registrar Tutorados')
 
 @section('content_header')
-    <h1>Registrar Tutorados</h1>
+    <h1>Registrar Estudiantes</h1>
 @stop
 
 @section('content')
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h3 class="card-title">Nuevo Tutorados</h3>
+            <h3 class="card-title">Nuevo Estudiante</h3>
         </div>
         <div class="card-body">
             @if ($errors->any())
@@ -25,7 +25,6 @@
             <form action="{{ route('admin.tutorados.store') }}" method="POST">
                 @csrf
                 <div class="row">
-                   
                     <div class="form-group col-md-4">
                         <label for="matricula">Matrícula</label>
                         <input type="text" name="matricula" class="form-control" value="{{ old('matricula') }}" required>
@@ -43,19 +42,16 @@
                 </div>
 
                 <div class="row">
-                   
                     <div class="form-group col-md-4">
                         <label for="curp">CURP</label>
                         <input type="text" name="curp" class="form-control" value="{{ old('curp') }}">
                     </div>
 
-                   
                     <div class="form-group col-md-4">
                         <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                         <input type="date" name="fecha_nacimiento" class="form-control" value="{{ old('fecha_nacimiento') }}">
                     </div>
 
-                 
                     <div class="form-group col-md-4">
                         <label for="genero">Género</label>
                         <select name="genero" class="form-control">
@@ -68,19 +64,16 @@
                 </div>
 
                 <div class="row">
-                
                     <div class="form-group col-md-4">
                         <label for="correo_institucional">Correo Institucional</label>
                         <input type="email" name="correo_institucional" class="form-control" value="{{ old('correo_institucional') }}" required>
                     </div>
 
-                   
                     <div class="form-group col-md-4">
                         <label for="telefono_celular">Teléfono Celular</label>
                         <input type="text" name="telefono_celular" class="form-control" value="{{ old('telefono_celular') }}">
                     </div>
 
-                
                     <div class="form-group col-md-4">
                         <label for="domicilio">Domicilio</label>
                         <input type="text" name="domicilio" class="form-control" value="{{ old('domicilio') }}">
@@ -88,7 +81,6 @@
                 </div>
 
                 <div class="row">
-                  
                     <div class="form-group col-md-4">
                         <label for="carrera">Carrera</label>
                         <input type="text" name="carrera" class="form-control" value="{{ old('carrera') }}">
@@ -112,16 +104,27 @@
                 </div>
 
                 <div class="row">
-                   
                     <div class="form-group col-md-6">
                         <label for="fecha_ingreso">Fecha de Ingreso</label>
                         <input type="date" name="fecha_ingreso" class="form-control" value="{{ old('fecha_ingreso') }}">
                     </div>
 
-                   
                     <div class="form-group col-md-6">
                         <label for="fecha_egreso">Fecha de Egreso</label>
                         <input type="date" name="fecha_egreso" class="form-control" value="{{ old('fecha_egreso') }}">
+                    </div>
+                </div>
+
+           
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Contraseña</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Confirmar Contraseña</label>
+                        <input type="password" name="password_confirmation" class="form-control" required>
                     </div>
                 </div>
 

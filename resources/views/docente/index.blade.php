@@ -30,12 +30,11 @@
             <tbody>
                 @foreach($tutores as $tutor)
                 <tr>
-                    <td>
-                        @if($tutor->foto_perfil)
-                            <img src="{{ asset('storage/'.$tutor->foto_perfil) }}" alt="Foto" width="50">
-                        @else
-                            <img src="{{ asset('img/default.png') }}" alt="Foto" width="50">
-                        @endif
+                    <td class="text-center">
+                        @php
+                            $foto = $tutor->foto_perfil ? asset('storage/'.$tutor->foto_perfil) : asset('img/default.png');
+                        @endphp
+                        <img src="{{ $foto }}" alt="Foto" width="50" class="img-thumbnail tutor-img" style="cursor:pointer;" title="Click para ver">
                     </td>
                     <td>{{ $tutor->nombre }} {{ $tutor->apellidos }}</td>
                     <td>{{ $tutor->correo_electronico }}</td>
@@ -57,4 +56,35 @@
         </table>
     </div>
 </div>
+
+<div class="modal fade" id="fotoModal" tabindex="-1" role="dialog" aria-labelledby="fotoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <img id="fotoPreview" src="" alt="Foto Tutor" class="img-fluid">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@stop
+
+@section('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fotos = document.querySelectorAll('.tutor-img');
+        const modal = new bootstrap.Modal(document.getElementById('fotoModal'));
+        const preview = document.getElementById('fotoPreview');
+
+        fotos.forEach(foto => {
+            foto.addEventListener('click', function () {
+                preview.src = this.src;
+                modal.show();
+            });
+        });
+    });
+</script>
 @stop

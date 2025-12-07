@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
     protected $fillable = [
         'name',
         'email',
@@ -40,9 +41,4 @@ class User extends Authenticatable
 
         return $userRole === $roles;
     }
-    public function user()
-{
-    return $this->belongsTo(User::class, 'users_id'); 
-}
-
 }

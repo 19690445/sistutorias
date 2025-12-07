@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tutorado;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminTutoradoController extends Controller
 {
@@ -32,22 +35,51 @@ class AdminTutoradoController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'matricula' => 'required|string|max:50|unique:estudiantes',
-            'correo_institucional' => 'required|email|max:100|unique:estudiantes',
-            'nombre' => 'required|string|max:100',
-            'apellidos' => 'required|string|max:100',
-            'carrera' => 'required|string|max:100',
-            'semestre' => 'required|integer|min:1|max:12',
-            'estado' => 'required|string',
-        ]);
+{
+    $request->validate([
+        'matricula' => 'required|string|max:50|unique:estudiantes',
+        'correo_institucional' => 'required|email|max:100|unique:users,email',
+        'nombre' => 'required|string|max:100',
+        'apellidos' => 'required|string|max:100',
+        'carrera' => 'required|string|max:100',
+        'semestre' => 'required|integer|min:1|max:12',
+        'estado' => 'required|string',
+        'password' => 'required|min:6|confirmed', 
+    ]);
 
-        Tutorado::create($request->all());
-
-        return redirect()->route('admin.tutorados.index')
-                         ->with('success', 'Tutorado registrado correctamente.');
+    $rolTutorado = Role::where('nombre', 'tutorado')->first();
+    if (!$rolTutorado) {
+        return back()->withErrors(['rol' => 'El rol tutorado no existe']);
     }
+
+    $user = User::create([
+        'name' => $request->nombre . ' ' . $request->apellidos,
+        'email' => $request->correo_institucional,
+        'password' => Hash::make($request->password ?? '12345678'), 
+        'rol_id' => $rolTutorado->id,
+    ]);
+
+    Tutorado::create([
+        'users_id' => $user->id,
+        'matricula' => $request->matricula,
+        'nombre' => $request->nombre,
+        'apellidos' => $request->apellidos,
+        'curp' => $request->curp ?? null,
+        'fecha_nacimiento' => $request->fecha_nacimiento ?? null,
+        'genero' => $request->genero ?? null,
+        'correo_institucional' => $request->correo_institucional,
+        'telefono_celular' => $request->telefono_celular ?? null,
+        'domicilio' => $request->domicilio ?? null,
+        'carrera' => $request->carrera,
+        'semestre' => $request->semestre,
+        'estado' => $request->estado,
+        'fecha_ingreso' => $request->fecha_ingreso ?? null,
+        'fecha_egreso' => $request->fecha_egreso ?? null,
+    ]);
+
+    return redirect()->route('admin.tutorados.index')
+                     ->with('success', 'Tutorado registrado correctamente.');
+}
 
     
     public function edit($id)

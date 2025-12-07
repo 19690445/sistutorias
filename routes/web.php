@@ -14,7 +14,7 @@ use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\CanalizacionController;
-use App\Http\Controllers\EstudianteController;
+
 
 /*
 RUTA PRINCIPAL
@@ -195,30 +195,5 @@ Route::middleware(['auth', 'role:admin,coordinador,docente'])->group(function ()
 
     Route::put('mi-perfil', [TutorController::class, 'actualizarPerfil'])
         ->name('tutores.actualizarPerfil');
-});
-
-/*
-PERFIL ESTUDIANTES
-*/
-    Route::middleware(['auth'])->group(function () {
-
-        // Admin y Coordinador
-        Route::middleware(['role:admin,coordinador'])->group(function () {
-            Route::resource('estudiantes', EstudianteController::class);
-        });
-
-        // Docente
-        Route::middleware(['role:docente'])->group(function () {
-            Route::get('/estudiantes/docente', [EstudianteController::class, 'indexDocente'])
-                ->name('estudiantes.docente.index');
-        });
-
-        // Estudiante 
-        Route::middleware(['role:estudiante'])->group(function () {
-            Route::get('/mi-perfil', [EstudianteController::class, 'perfil'])
-                ->name('estudiantes.perfil');
-            Route::put('/mi-perfil/{id}', [EstudianteController::class, 'updatePerfil'])
-                ->name('estudiantes.perfil.update');
-        });
 });
 

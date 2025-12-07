@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tutor;
+use App\Models\Role;
+use App\Models\Docente;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -27,36 +31,63 @@ class TutorController extends Controller
         return view('docente.create');
     }
 
-        public function store(Request $request)
-    {
-        $data = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'apellidos' => 'required|string|max:100',
-            'curp' => 'nullable|string|max:18',
-            'fecha_nacimiento' => 'nullable|date',
-            'sexo' => 'nullable|string',
-            'correo_electronico' => 'required|email|unique:tutores',
-            'telefono' => 'nullable|string|max:20',
-            'departamento' => 'nullable|string|max:100',
-            'rfc' => 'nullable|string|max:13',
-            'nivel_estudios' => 'nullable|string|max:100',
-            'descripcion_estudios' => 'nullable|string',
-            'estado' => 'nullable|string',
-            'foto_perfil' => 'nullable|image|max:2048',
-        ]);
+       public function store(Request $request)
+{
+
+    $data = $request->validate([
+        'nombre' => 'required|string|max:100',
+        'apellidos' => 'required|string|max:100',
+        'curp' => 'nullable|string|max:18',
+        'fecha_nacimiento' => 'nullable|date',
+        'sexo' => 'nullable|string',
+        'correo_electronico' => 'required|email|unique:tutores',
+        'password' => 'required|min:6|confirmed',
+        'telefono' => 'nullable|string|max:20',
+        'departamento' => 'nullable|string|max:100',
+        'rfc' => 'nullable|string|max:13',
+        'nivel_estudios' => 'nullable|string|max:100',
+        'descripcion_estudios' => 'nullable|string',
+        'estado' => 'nullable|string',
+        'foto_perfil' => 'nullable|image|max:2048',
+    ]);
+   
+    $roldocente = Role::where('nombre', 'docente')->firstOrFail();
 
 
-        $data['users_id'] = auth()->id(); 
+    $user = User::create([
+        'name' => $data['nombre'] . ' ' . $data['apellidos'],
+        'email' => $data['correo_electronico'],
+        'password' => Hash::make($data['password']),
+        'rol_id' => $roldocente->id,
+    ]);
 
-        // Guardar foto si se sube
-        if ($request->hasFile('foto_perfil')) {
-            $data['foto_perfil'] = $request->file('foto_perfil')->store('tutores', 'public');
-        }
-
-        Tutor::create($data);
-
-        return redirect()->route('tutores.index')->with('success', 'Tutor registrado correctamente.');
+    
+    $fotoPath = null;
+    if ($request->hasFile('foto_perfil')) {
+        $fotoPath = $request->file('foto_perfil')->store('tutores', 'public');
     }
+
+    
+    $tutor = Tutor::create([
+        'users_id' => $user->id,
+        'nombre' => $data['nombre'],
+        'apellidos' => $data['apellidos'],
+        'curp' => $data['curp'] ?? null,
+        'fecha_nacimiento' => $data['fecha_nacimiento'] ?? null,
+        'sexo' => $data['sexo'] ?? null,
+        'correo_electronico' => $data['correo_electronico'],
+        'telefono' => $data['telefono'] ?? null,
+        'departamento' => $data['departamento'] ?? null,
+        'rfc' => $data['rfc'] ?? null,
+        'nivel_estudios' => $data['nivel_estudios'] ?? null,
+        'descripcion_estudios' => $data['descripcion_estudios'] ?? null,
+        'estado' => $data['estado'] ?? 'activo',
+        'foto_perfil' => $fotoPath,
+    ]);
+
+    return redirect()->route('tutores.index')->with('success', 'Tutor registrado correctamente.');
+}
+
 
    
     public function edit(Tutor $tutor)
@@ -91,9 +122,6 @@ class TutorController extends Controller
         ]);
 
         if ($request->hasFile('foto_perfil')) {
-            if ($tutor->foto_perfil) {
-                Storage::disk('public')->delete($tutor->foto_perfil);
-            }
             $data['foto_perfil'] = $request->file('foto_perfil')->store('tutores', 'public');
         }
 

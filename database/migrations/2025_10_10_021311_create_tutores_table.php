@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('nivel_estudios', 100)->nullable();
             $table->text('descripcion_estudios')->nullable();
             $table->enum('estado', ['activo', 'inactivo'])->default('activo');
+            $table->string('foto_perfil')->nullable();
             $table->timestamp('fecha_registro')->useCurrent();
             $table->timestamp('fecha_actualizacion')->useCurrent()->useCurrentOnUpdate();
             $table->timestamps();
