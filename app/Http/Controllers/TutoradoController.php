@@ -65,4 +65,82 @@ class TutoradoController extends Controller
         return redirect()->route('admin.tutorados.index')
             ->with('success', 'Tutorado registrado correctamente.');
     }
+    public function show()
+    {
+        $user = Auth::user();
+        $tutorado = Tutorado::where('users_id', $user->id)->first();
+
+        return view('tutorado.perfil', compact('tutorado'));
+    }
+    public function showPerfil()
+    {
+        $user = auth()->user();
+        $tutorado = $user->estudiante; 
+        return view('tutorado.perfil', compact('tutorado'));
+    }
+
+    public function editPerfil()
+{
+    $tutorado = auth()->user()->estudiante; 
+    return view('tutorado.edit-perfil', compact('tutorado'));
+}
+
+public function update(Request $request)
+    {
+    
+        $user = auth()->user();
+
+        $tutorado = \App\Models\Estudiante::where('users_id', $user->id)->first();
+
+        if (!$tutorado) {
+            return redirect()->back()->with('error', 'No se encontró el perfil del tutorado.');
+        }
+
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'curp' => 'nullable|string|max:18',
+            'genero' => 'nullable|string',
+            'fecha_nacimiento' => 'nullable|date',
+            'domicilio' => 'nullable|string|max:255',
+            'telefono_celular' => 'nullable|string|max:20',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $tutorado->nombre = $request->nombre;
+        $tutorado->apellidos = $request->apellidos;
+        $tutorado->curp = $request->curp;
+        $tutorado->genero = $request->genero;
+        $tutorado->fecha_nacimiento = $request->fecha_nacimiento;
+        $tutorado->domicilio = $request->domicilio;
+        $tutorado->telefono_celular = $request->telefono_celular;
+
+      
+        if ($request->hasFile('foto')) {
+            
+            if ($tutorado->foto && \Storage::exists($tutorado->foto)) {
+                \Storage::delete($tutorado->foto);
+            }
+
+            $path = $request->file('foto')->store('tutorados', 'public');
+            $tutorado->foto = $path;
+        }
+
+        $tutorado->save();
+
+        return redirect()->route('tutorado.perfil')->with('success', 'Perfil actualizado correctamente.');
+    }
+
+public function edit()
+    {
+        
+        $tutorado = auth()->user()->estudiante; 
+
+        if (!$tutorado) {
+            abort(404, 'No se encontró el tutorado.');
+        }
+
+        return view('tutorado.edit', compact('tutorado'));
+    }
+
 }

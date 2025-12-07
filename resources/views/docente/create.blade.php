@@ -3,7 +3,7 @@
 @section('title', 'Agregar Tutor')
 
 @section('content_header')
-    <h1>Agregar Tutor</h1>
+    <h1>Agregar Docente</h1>
 @stop
 
 @section('content')
@@ -11,11 +11,11 @@
     @csrf
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Datos del Tutor</h3>
+            <h3 class="card-title">Datos del Docente</h3>
         </div>
         <div class="card-body">
             <div class="row">
-                <!-- Nombre y Apellidos -->
+                
                 <div class="form-group col-md-6">
                     <label>Nombre</label>
                     <input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}" required>
@@ -27,7 +27,7 @@
             </div>
 
             <div class="row">
-                <!-- CURP y Fecha -->
+                
                 <div class="form-group col-md-6">
                     <label>CURP</label>
                     <input type="text" name="curp" class="form-control" value="{{ old('curp') }}">
@@ -39,7 +39,7 @@
             </div>
 
             <div class="row">
-                <!-- Sexo y Teléfono -->
+                
                 <div class="form-group col-md-6">
                     <label>Sexo</label>
                     <select name="sexo" class="form-control">
@@ -56,7 +56,7 @@
             </div>
 
             <div class="row">
-                <!-- Correo y Contraseña -->
+                
                 <div class="form-group col-md-6">
                     <label>Correo electrónico</label>
                     <input type="email" name="correo_electronico" class="form-control" value="{{ old('correo_electronico') }}" required>
@@ -72,7 +72,7 @@
             </div>
 
             <div class="row">
-                <!-- Departamento y RFC -->
+                
                 <div class="form-group col-md-6">
                     <label>Departamento</label>
                     <select name="departamento" class="form-control">
@@ -94,7 +94,7 @@
             </div>
 
             <div class="row">
-                <!-- Nivel de estudios y Estado -->
+               
                 <div class="form-group col-md-6">
                     <label>Nivel de estudios</label>
                     <select name="nivel_estudios" class="form-control">
@@ -119,7 +119,7 @@
             </div>
 
             <div class="row">
-                <!-- Descripción y Foto -->
+               
                 <div class="form-group col-md-8">
                     <label>Descripción de estudios</label>
                     <textarea name="descripcion_estudios" class="form-control">{{ old('descripcion_estudios') }}</textarea>
@@ -127,7 +127,8 @@
                 <div class="form-group col-md-4">
                     <label>Foto de perfil</label>
                     <input type="file" name="foto_perfil" class="form-control" id="foto_perfil">
-                    <!-- Preview -->
+
+                    <!-- vista -->
                     <img id="preview" src="{{ asset('img/default.png') }}" alt="Vista previa" class="img-thumbnail mt-2" width="150">
                 </div>
             </div>

@@ -93,7 +93,7 @@ class TutorController extends Controller
     public function edit(Tutor $tutor)
     {
         if (Auth::user()->hasRole('tutor') && Auth::id() != $tutor->users_id) {
-            abort(403, 'No tienes permisos para editar a este tutor.');
+            abort(403, 'No tienes permisos para editar a este docente.');
         }
 
         return view('docente.edit', compact('tutor'));
@@ -102,7 +102,7 @@ class TutorController extends Controller
     public function update(Request $request, Tutor $tutor)
     {
         if (Auth::user()->hasRole('tutor') && Auth::id() != $tutor->users_id) {
-            abort(403, 'No tienes permisos para actualizar a este tutor.');
+            abort(403, 'No tienes permisos para actualizar a este docente.');
         }
 
         $data = $request->validate([
@@ -127,7 +127,7 @@ class TutorController extends Controller
 
         $tutor->update($data);
 
-        return redirect()->route('tutores.index')->with('success', 'Tutor actualizado correctamente.');
+        return redirect()->route('tutores.index')->with('success', 'Docente actualizado correctamente.');
     }
 
     public function destroy(Tutor $tutor)
@@ -140,7 +140,7 @@ class TutorController extends Controller
 
         $tutor->delete();
 
-        return redirect()->route('tutores.index')->with('success', 'Tutor eliminado correctamente.');
+        return redirect()->route('tutores.index')->with('success', 'Docente eliminado correctamente.');
     }
 
     public function perfil()

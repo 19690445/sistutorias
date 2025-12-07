@@ -18,7 +18,7 @@
         <table class="table table-bordered table-hover text-center align-middle">
             <thead class="table-dark">
                 <tr>
-                    <th>Fotos</th>
+                    <th>Foto</th>
                     <th>Nombre completo</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
@@ -59,7 +59,7 @@
                         <form action="{{ route('tutores.destroy', $tutor) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('¿Desea eliminar este tutor?')">Eliminar</button>
+                            <button class="btn btn-danger btn-sm" onclick="return confirm('¿Desea eliminar este docente?')">Eliminar</button>
                         </form>
                     </td>
                 </tr>

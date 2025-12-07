@@ -312,7 +312,14 @@ return [
             'icon' => 'fas fa-tachometer-alt',
             'classes' => 'bd-blue text-white',
             'can' => 'gestionar-usuarios'
-       ],
+        ],
+        [
+            'text' => 'Mi perfil',
+            'url' => 'tutorado/mi-perfil',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'perfil-estudiante'
+        ],
         [
             'text' => 'Ver Periodos',
              'url' => 'coordinador/periodos',
@@ -341,7 +348,7 @@ return [
             'classes' => 'bd-blue text-white',
         ],
         [
-            'text' => 'Tutorados',
+            'text' => 'Crear Tutorados',
             'url' => 'admin/tutorados/create',
             'icon' => 'fas fa-users-line',
             'classes' => 'bd-blue text-white',
@@ -349,7 +356,7 @@ return [
         ],
 
         [
-            'text' => 'Ver Estudiantes',
+            'text' => 'Ver Tutorados',
             'url' => 'admin/tutorados',
             'icon' => 'fas fa-users',
             'classes' => 'bd-blue text-white',
@@ -358,7 +365,7 @@ return [
         
         [
             'text' => 'Crear Docente',
-            'url' => 'admin/tutores/create',
+            'url' => 'tutores/create',
             'icon' => 'fas fa-users',
             'classes' => 'bd-blue text-white',
             'can' => 'crear-docente'

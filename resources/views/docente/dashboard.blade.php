@@ -12,9 +12,7 @@
 @stop
 
 @section('content')
-    {{-- ====================== --}}
-    {{-- TARJETAS RESUMEN --}}
-    {{-- ====================== --}}
+    
     <div class="row mt-3">
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info shadow-sm">
@@ -61,9 +59,9 @@
         </div>
     </div>
 
-    {{-- ====================== --}}
+    
     {{-- GRAFICAS Y ACTIVIDAD --}}
-    {{-- ====================== --}}
+    
     <div class="row">
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm">
@@ -92,9 +90,9 @@
         </div>
     </div>
 
-    {{-- ====================== --}}
-    {{-- HERRAMIENTAS --}}
-    {{-- ====================== --}}
+   
+   
+   
     <div class="card shadow">
         <div class="card-header bg-primary text-white d-flex align-items-center">
             <i class="fas fa-tools me-2"></i>
@@ -142,7 +140,7 @@
     {{-- Chart.js --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // === GRAFICA DE PROGRESO ===
+        
         const ctxProgreso = document.getElementById('graficaProgreso');
         new Chart(ctxProgreso, {
             type: 'line',
@@ -164,7 +162,7 @@
             }
         });
 
-        // === GRAFICA DE ACTIVIDADES ===
+    
         const ctxActividades = document.getElementById('graficaActividades');
         new Chart(ctxActividades, {
             type: 'doughnut',
