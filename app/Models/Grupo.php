@@ -42,5 +42,9 @@ class Grupo extends Model
         return $this->hasMany(Tutorado::class);
     }
 
-    
+   
+    public function pats()
+    {
+        return $this->hasMany(PAT::class, 'grupos_id');
+    }
 }

@@ -334,20 +334,7 @@ return [
             'classes' => 'bd-blue text-white',
             'can' => 'ver-usuarios'
         ],
-        [
-            'text' => 'Crear Diagnosticos',
-            'url' => 'diagnosticos/create',
-            'icon' => 'fas fa-users',
-            'classes' => 'bd-blue text-white',
-            'can' => 'crear-diagnosticos'
-        ],
-        [
-            'text' => 'Diagnosticos',
-            'url' => 'diagnosticos',
-            'icon' => 'fas fa-users',
-            'classes' => 'bd-blue text-white',
-            'can' => 'ver-diagnosticos'
-        ],
+
         [
             'text' => 'Canalizaciones',
             'url' => 'canalizaciones/create',
@@ -355,6 +342,7 @@ return [
             'classes' => 'bd-blue text-white',
             'can' => 'ver-canalizaciones'
         ],
+
         [
             'text' => 'Crear Tutorados',
             'url' => 'admin/tutorados/create',
@@ -408,7 +396,22 @@ return [
              'classes' => 'bd-blue text-white',
              'can' => 'ver-asistencia'
         ],
-          
+        [
+            'text' => 'Pats',
+             'url' => 'pats',
+             'icon' => 'fas fa-fw fa-cog',
+             'classes' => 'bd-blue text-white',
+             'can' => 'ver-pats'
+        ],
+
+        [
+            'text' => 'Diagnosticos',
+            'url' => 'diagnosticos',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'ver-diagnosticos'
+        ],
+
         [
             'type' => 'navbar-search',
             'text' => 'search',

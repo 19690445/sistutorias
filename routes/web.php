@@ -17,6 +17,7 @@ use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\CanalizacionController;
 use App\Http\Controllers\PatController;
 use App\Http\Controllers\SemanaController;
+
 /*
 RUTA PRINCIPAL
 */
@@ -124,15 +125,20 @@ Route::middleware(['auth', 'role:admin,coordinador,docente'])->group(function ()
         ->name('tutores.actualizarPerfil');
 });
 
-/*
-DIAGNÓSTICOS
-*/
-Route::middleware('auth')->group(function () {
-
+    /*
+    DIAGNÓSTICOS
+    */
+    // Rutas para Diagnósticos
     Route::resource('diagnosticos', DiagnosticoController::class);
+    Route::get('diagnosticos/{diagnostico}/detalles', [DiagnosticoController::class, 'detalles'])->name('diagnosticos.detalles');
 
-    Route::post('diagnosticos/{diagnostico}/responder', [DiagnosticoController::class, 'responder'])
-        ->name('diagnosticos.responder');
+    /*
+    INDICADOPRES
+    */
+    Route::prefix('indicadores')->name('indicadores.')->group(function () {
+    Route::get('/{indicador}/edit', [IndicadorController::class, 'edit'])->name('edit');
+    Route::put('/{indicador}', [IndicadorController::class, 'update'])->name('update');
+    Route::delete('/{indicador}', [IndicadorController::class, 'destroy'])->name('destroy');
 });
 
 // ===== GRUPOS =====
@@ -186,7 +192,6 @@ Route::prefix('grupos')->group(function () {
     Route::put('asistencias/{asistencia}', [AsistenciaController::class, 'update'])->name('asistencias.update');
     Route::delete('asistencias/{asistencia}', [AsistenciaController::class, 'destroy'])->name('asistencias.destroy');
 
-    // IMPORTANTE: Esta ruta debe ir ANTES de la ruta con parámetro {asistencia}
     Route::get('asistencias/estudiantes/{grupo}', [AsistenciaController::class, 'getEstudiantesByGrupo'])
         ->name('asistencias.getEstudiantesByGrupo');
 
@@ -220,10 +225,11 @@ Route::middleware('auth')->group(function () {
 /*
 PATS
 */
-Route::middleware(['auth', 'role:admin,coordinador,docente'])->group(function () {
-    Route::resource('pats', PatController::class)->only([
-        'index', 'create', 'store', 'destroy'
-    ]);
-    Route::resource('semanas', SemanaController::class);
 
-});
+Route::get('/pats', [PATController::class, 'index'])->name('pats.index');
+Route::get('/pats/create', [PATController::class, 'create'])->name('pats.create');
+Route::post('/pats', [PATController::class, 'store'])->name('pats.store');
+Route::get('/pats/{pat}/edit', [PATController::class, 'edit'])->name('pats.edit');
+Route::put('/pats/{pat}', [PATController::class, 'update'])->name('pats.update');
+Route::delete('/pats/{pat}', [PATController::class, 'destroy'])->name('pats.destroy');
+Route::get('/pats/dashboard', [PATController::class, 'dashboard'])->name('pats.dashboard');
