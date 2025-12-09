@@ -23,7 +23,11 @@ class Grupo extends Model
         'turno',
     ];
 
-    public function tutor()
+    public function estudiantes()
+    {
+        return $this->hasMany(Estudiante::class, 'grupo_id');
+    }
+     public function tutor()
     {
         return $this->belongsTo(Tutor::class, 'tutores_id');
     }
@@ -33,13 +37,10 @@ class Grupo extends Model
         return $this->belongsTo(Periodo::class);
     }
 
-    public function estudiantes()
+    public function tutorados()
     {
-        return $this->hasMany(Estudiante::class);
+        return $this->hasMany(Tutorado::class);
     }
 
-    public function asistencias()
-    {
-        return $this->hasMany(Asistencia::class);
-    }
+    
 }

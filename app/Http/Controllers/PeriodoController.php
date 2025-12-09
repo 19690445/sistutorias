@@ -2,85 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Periodo;
+use Illuminate\Http\Request;
 
 class PeriodoController extends Controller
 {
-    
+    public function __construct()
+    {
+        $this->middleware(['auth','role:admin,coordinador']);
+    }
+
     public function index()
     {
         $periodos = Periodo::all();
         return view('periodos.index', compact('periodos'));
     }
 
-   
     public function create()
     {
         return view('periodos.create');
     }
 
-
     public function store(Request $request)
     {
-        
         $request->validate([
-            'nombre_periodo' => 'required|string|max:100',
+            'nombre_periodo' => 'required|string|max:50',
             'año_periodo' => 'required|integer',
-            'descripcion' => 'nullable|string',
             'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
-            'estado' => 'required|in:activo,inactivo',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+            'estado' => 'required|in:activo,inactivo,finalizado',
         ]);
 
         Periodo::create($request->all());
 
-        
-        $rolePrefix = auth()->user()->role->nombre; 
-        return redirect()->route($rolePrefix.'.periodos.index')
+        return redirect()->route('periodos.index')
                          ->with('success', 'Periodo creado correctamente.');
     }
 
-    public function show($id)
+    public function edit(Periodo $periodo)
     {
-        $periodo = Periodo::findOrFail($id);
-        return view('periodos.show', compact('periodo'));
-    }
-
-    public function edit($id)
-    {
-        $periodo = Periodo::findOrFail($id);
         return view('periodos.edit', compact('periodo'));
     }
 
-    
-    public function update(Request $request, $id)
+    public function update(Request $request, Periodo $periodo)
     {
-        $periodo = Periodo::findOrFail($id);
-
         $request->validate([
-            'nombre_periodo' => 'required|string|max:100',
+            'nombre_periodo' => 'required|string|max:50',
             'año_periodo' => 'required|integer',
-            'descripcion' => 'nullable|string',
             'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
-            'estado' => 'required|in:activo,inactivo',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+            'estado' => 'required|in:activo,inactivo,finalizado',
         ]);
 
         $periodo->update($request->all());
 
-        $rolePrefix = auth()->user()->role->nombre;
-        return redirect()->route($rolePrefix.'.periodos.index')
+        return redirect()->route('periodos.index')
                          ->with('success', 'Periodo actualizado correctamente.');
     }
 
-    public function destroy($id)
+    public function destroy(Periodo $periodo)
     {
-        $periodo = Periodo::findOrFail($id);
         $periodo->delete();
-
-        $rolePrefix = auth()->user()->role->nombre;
-        return redirect()->route($rolePrefix.'.periodos.index')
+        return redirect()->route('periodos.index')
                          ->with('success', 'Periodo eliminado correctamente.');
     }
 }

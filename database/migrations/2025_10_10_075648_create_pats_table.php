@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('grupos_id')->constrained('grupos')->onDelete('cascade');
             $table->foreignId('periodo_id')->constrained('periodo')->onDelete('cascade'); 
             $table->string('actividad', 150);
-            $table->string('responsable', 100)->nullable(); // Tutor o estudiante
+            $table->string('responsable', 100)->nullable(); // Tutor o tutorado
             $table->string('semana_planeada', 50)->nullable();
             $table->string('semana_real', 50)->nullable();
             $table->enum('estado', ['pendiente', 'en_proceso', 'completado'])->default('pendiente');   

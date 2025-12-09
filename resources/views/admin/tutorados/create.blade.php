@@ -87,6 +87,8 @@
                         <option value="INGENIERÍA AMBIENTAL" {{ old('carrera') == 'INGENIERÍA AMBIENTAL' ? 'selected' : '' }}>INGENIERÍA AMBIENTAL</option>
                         <option value="INGENIERÍA EN AGRONOMÍA" {{ old('carrera') == 'INGENIERÍA EN AGRONOMÍA' ? 'selected' : '' }}>INGENIERÍA EN AGRONOMÍA</option>
                         <option value="INGENIERÍA EN INTELIGENCIA ARTIFICIAL" {{ old('carrera') == 'INGENIERÍA EN INTELIGENCIA ARTIFICIAL' ? 'selected' : '' }}>INGENIERÍA EN INTELIGENCIA ARTIFICIAL</option>
+                        <option value="INGENIERÍA EN ALIMENTARIAS" {{ old('carrera') == 'INGENIERÍA EN ALIMENTARIAS' ? 'selected' : '' }}>INGENIERÍA EN ALIMENTARIAS</option>
+                        <option value="INGENIERÍA EN DESARROLLO DE APLICACIONES" {{ old('carrera') == 'INGENIERÍA EN DESARROLLO DE APLICACIONES' ? 'selected' : '' }}>INGENIERÍA EN DESARROLLO DE APLICACIONES</option>
                     </select>
                 </div>
 
@@ -94,7 +96,7 @@
                     <label for="semestre">Semestre</label>
                     <select name="semestre" class="form-control">
                         <option value="">Seleccione</option>
-                        @for ($i = 1; $i <= 12; $i++)
+                        @for ($i = 1; $i <= 5; $i++)
                             <option value="{{ $i }}" {{ old('semestre') == $i ? 'selected' : '' }}>{{ $i }}</option>
                         @endfor
                     </select>
@@ -109,15 +111,14 @@
                         <option value="activo" {{ old('estado') == 'activo' ? 'selected' : '' }}>Activo</option>
                         <option value="baja_temporal" {{ old('estado') == 'baja_temporal' ? 'selected' : '' }}>Baja Temporal</option>
                         <option value="baja_definitiva" {{ old('estado') == 'baja_definitiva' ? 'selected' : '' }}>Baja Definitiva</option>
-                        <option value="egresado" {{ old('estado') == 'egresado' ? 'selected' : '' }}>Egresado</option>
                     </select>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="fecha_ingreso">Fecha de Ingreso</label>
+                    <label for="fecha_ingreso">Fecha de Ingreso(Opcional)</label>
                     <input type="date" name="fecha_ingreso" class="form-control" value="{{ old('fecha_ingreso') }}">
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="fecha_egreso">Fecha de Egreso</label>
+                    <label for="fecha_egreso">Fecha de Egreso(Opcional)</label>
                     <input type="date" name="fecha_egreso" class="form-control" value="{{ old('fecha_egreso') }}">
                 </div>
             </div>
@@ -132,6 +133,9 @@
                     <input type="password" name="password_confirmation" class="form-control" required>
                 </div>
             </div>
+            <div class="row">
+    
+        </div>
 
             <div class="mt-3">
                 <button type="submit" class="btn btn-success">Registrar</button>

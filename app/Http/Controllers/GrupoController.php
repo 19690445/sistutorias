@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Estudiante;
 use App\Models\Grupo;
 use App\Models\Tutor;
 use App\Models\Periodo;
-use App\Models\Estudiante;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\EstudiantesImport;
+use App\Imports\GruposImport;
+use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\Rule;
 
 class GrupoController extends Controller
 {
+ 
     public function index()
     {
-        $user = Auth::user();
-
-        if ($user->rol === 'docente') {
-            $grupos = Grupo::where('tutores_id', $user->tutor_id)
-                            ->with('tutor', 'periodo', 'estudiantes')
-                            ->get();
-        } else {
-            $grupos = Grupo::with('tutor', 'periodo', 'estudiantes')->get();
-        }
-
+        $grupos = Grupo::all();
         return view('grupos.index', compact('grupos'));
     }
 
@@ -30,30 +29,26 @@ class GrupoController extends Controller
     {
         $tutores = Tutor::all();
         $periodos = Periodo::all();
-
         return view('grupos.create', compact('tutores', 'periodos'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'clave_grupo' => 'required|unique:grupos',
-            'nombre_grupo' => 'required',
-            'tutores_id' => 'required',
-            'periodo_id' => 'required',
-            'carrera' => 'required',
-            'semestre' => 'required',
+            'clave_grupo' => 'required|string|max:20|unique:grupos,clave_grupo',
+            'nombre_grupo' => 'required|string|max:100',
+            'tutores_id' => 'required|exists:tutores,id',
+            'periodo_id' => 'required|exists:periodo,id',
+            'carrera' => 'required|string|max:100',
+            'semestre' => 'required|integer',
+            'modalidad' => 'required|in:presencial,virtual,mixta',
+            'turno' => 'required|in:matutino,intermedio,vespertino',
         ]);
 
         Grupo::create($request->all());
 
-        return redirect()->route('grupos.index')->with('success', 'Grupo creado correctamente');
-    }
-
-    public function show($id)
-    {
-        $grupo = Grupo::with('estudiantes')->findOrFail($id);
-        return view('grupos.show', compact('grupo'));
+        return redirect()->route('grupos.index')
+            ->with('success', 'Grupo creado correctamente');
     }
 
     public function edit($id)
@@ -61,40 +56,140 @@ class GrupoController extends Controller
         $grupo = Grupo::findOrFail($id);
         $tutores = Tutor::all();
         $periodos = Periodo::all();
-
         return view('grupos.edit', compact('grupo', 'tutores', 'periodos'));
     }
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'clave_grupo' => 'required|string|max:20|unique:grupos,clave_grupo,' . $id,
+            'nombre_grupo' => 'required|string|max:100',
+            'tutores_id' => 'required|exists:tutores,id',
+            'periodo_id' => 'required|exists:periodo,id',
+            'carrera' => 'required|string|max:100',
+            'semestre' => 'required|integer',
+            'modalidad' => 'required|in:presencial,virtual,mixta',
+            'turno' => 'required|in:matutino,intermedio,vespertino',
+        ]);
+
         $grupo = Grupo::findOrFail($id);
         $grupo->update($request->all());
 
-        return redirect()->route('grupos.index')->with('success', 'Grupo actualizado correctamente');
+        return redirect()->route('grupos.index')
+            ->with('success', 'Grupo actualizado correctamente.');
     }
 
     public function destroy($id)
     {
-        Grupo::destroy($id);
-        return redirect()->route('grupos.index')->with('success', 'Grupo eliminado correctamente');
-    }
-
-    public function addStudents($id)
-    {
         $grupo = Grupo::findOrFail($id);
-        $estudiantes = Estudiante::where('grupo_id', null)->get();
+        $grupo->delete();
 
-        return view('grupos.add-students', compact('grupo', 'estudiantes'));
+        return redirect()->route('grupos.index')
+            ->with('success', 'Grupo eliminado correctamente.');
     }
 
-    public function storeStudents(Request $request, $id)
+    public function formImportar($grupoId)
     {
-        foreach ($request->estudiantes as $alumnoId) {
-            $estudiante = Estudiante::find($alumnoId);
-            $estudiante->grupo_id = $id;
-            $estudiante->save();
+        $grupo = Grupo::findOrFail($grupoId);
+        return view('grupos.importar', compact('grupo'));
+    }
+
+    public function importarExcel(Request $request, $grupoId)
+{
+    $request->validate([
+        'archivo' => ['required', File::types(['csv', 'xls', 'xlsx'])],
+    ]);
+
+    $grupo = Grupo::findOrFail($grupoId);
+
+    try {
+        $data = Excel::toArray([], $request->file('archivo'))[0];
+        #dd($data);
+        $expectedHeaders = ['matricula', 'nombre', 'apellidos','curp','fecha_nacimiento','genero','correo_institucional','telefono_celular','domicilio','carrera','semestre','estado'];
+
+        $headers = array_map('strtolower', $data[0]);
+
+        foreach ($expectedHeaders as $expectedHeader) {
+            if (!in_array($expectedHeader, $headers)) {
+                return back()->with('error', "Falta la columna: $expectedHeader");
+            }
         }
 
-        return redirect()->route('grupos.show', $id)->with('success', 'Estudiantes agregados');
+        DB::beginTransaction();
+
+        foreach (array_slice($data, 1) as $row) {
+
+         
+            if (count(array_filter($row)) == 0) continue;
+
+            if (count($row) < 11) continue;
+
+            [$matricula, $nombre, $apellidos, $curp, $fechanacimiento, $genero, $email, $telefono, $domicilio, $carrera, $semestre, $estado, ] = $row;
+
+            if (!$email) continue;
+
+            #dump($row);
+
+            $user = User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => trim($nombre . ' ' . $apellidos),
+                    'password' => Hash::make('12345678'),
+                    'rol' =>4,
+                ]
+            );
+            #dump($user);
+
+            $estudiante = Estudiante::updateOrCreate(
+                ['users_id' => $user->id],
+                [
+                    'matricula' => $matricula,
+                    'nombre' => $nombre,
+                    'apellidos' => $apellidos,
+                    'curp' => $curp,
+                    'fecha_nacimiento' => $fechanacimiento,
+                    'genero' => $genero,
+                    'grupo_id' => $grupoId,
+                    'correo_institucional' => $email,
+                    'telefono_celular' => $telefono,
+                    'domicilio' => $domicilio,
+                    'carrera' => $carrera,
+                    'semestre' => $semestre,
+                    'estado' => 'activo',
+                    
+                    
+                ]
+            );
+            
+            if($estudiante->isDirty()){
+                $estudiante->save();
+            }
+            #dump($estudiante, $domicilio, $estudiante->domicilio);
+
+            // foreach($expectedHeaders as $eh){
+            //     if($$eh != $estudiante->$eh){
+            //         dump($eh, $estudiante->id, $$eh, $estudiante->$eh);
+            //         dump("El estudiante tiene cambios", $estudiante->isDirty());
+            //    }
+            //}
+        }
+
+        DB::commit();
+        ##dd("ALTO");
+        return back()->with('success', 'Estudiantes importados correctamente.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        dd($e->getMessage());
+        return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
     }
+}
+
+
+    public function show($id)
+    {
+        $grupo = Grupo::with('estudiantes')->findOrFail($id);
+        return view('grupos.show', compact('grupo'));
+    }
+
 }

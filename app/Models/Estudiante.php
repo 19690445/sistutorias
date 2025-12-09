@@ -10,12 +10,25 @@ class Estudiante extends Model
 
     protected $fillable = [
         'users_id',
+        'grupo_id',
         'matricula',
         'nombre',
-        'apellidos',
-        'correo_institucional',
+        'email',
         'carrera',
-        'semestre',
-        'estado'
+        
     ];
+
+   public function grupo()
+    {
+        return $this->belongsTo(Grupo::class, 'grupo_id');
+    }
+    
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class, 'estudiantes_id');
+    }
 }
+
+
+
+                    

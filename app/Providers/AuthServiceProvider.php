@@ -23,7 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
          Gate::define("crear-grupos", function ($user) {
-            return $user->hasRole("admin", "coordinador");
+            return $user->hasRole(["admin", "coordinador"]);
         });
 
          Gate::define("ver-usuarios", function ($user) {
@@ -38,8 +38,11 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasRole(["admin", "coordinador"]);
         });
 
+        Gate::define("crear-diagnosticos", function ($user) {
+            return $user->hasRole("docente");
+        });
         Gate::define("ver-diagnosticos", function ($user) {
-            return $user->hasRole(["admin", "coordinador", "docente"]);
+            return $user->hasRole("docente");
         });
 
         Gate::define("ver-asistencia", function ($user) {
@@ -48,11 +51,14 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define("crear-docente", function ($user) {
             return $user->hasRole(["admin", "coordinador",]);
-
         });
 
         Gate::define("ver-informacion", function ($user) {
-            return $user->hasRole(["admin", "coordinador",]);
+            return $user->hasRole(["admin", "coordinador"]);
+        });
+
+         Gate::define("ver-canalizaciones", function ($user) {
+            return $user->hasRole(["admin", "coordinador", "docente"]);
         });
 
         Gate::define("perfil-docente", function ($user) {

@@ -5,7 +5,6 @@
 @section('content_header')
     <h1>Grupos</h1>
     <a href="{{ route('grupos.create') }}" class="btn btn-primary">Nuevo Grupo</a>
-    
 @stop
 
 @section('content')
@@ -49,15 +48,18 @@
                                     <button type="submit" class="btn btn-sm btn-danger"
                                             onclick="return confirm('¿Está seguro de eliminar este grupo?')">Eliminar</button>
                                 </form>
-                                    <a href="{{ route('grupos.import.form', $grupo->id) }}" class="btn btn-success">
-                                    <i class="fas fa-file-excel"></i> Importar Excel
-                                    </a>
-                                    <a href="{{ route('grupos.show', $grupo->id) }}" class="btn btn-sm btn-info">
-    Ver estudiantes
-</a>
 
-                                    <a href="{{ route('tutorados.create', ['grupo_id' => $grupo->id]) }}" 
+                                <a href="{{ route('tutorados.create', ['grupo_id' => $grupo->id]) }}" 
                                    class="btn btn-sm btn-info">Agregar Tutorado</a>
+
+                                <!-- Formulario para subir Excel -->
+                                <form action="{{ route('grupos.import', $grupo->id) }}" method="POST" 
+                                      enctype="multipart/form-data" style="margin-top:5px;">
+                                    @csrf
+                                    <input type="file" name="file" accept=".xlsx,.xls" style="display:inline-block;" required>
+                                    <button type="submit" class="btn btn-sm btn-success">Importar Excel</button>
+                                </form>
+
                             </td>
                         </tr>
                     @endforeach

@@ -321,8 +321,8 @@ return [
             'can' => 'perfil-estudiante'
         ],
         [
-            'text' => 'Ver Periodos',
-             'url' => 'coordinador/periodos',
+            'text' => 'Periodos',
+             'url' => 'periodos',
              'icon' => 'fas fa-fw fa-cog',
              'classes' => 'bd-blue text-white',
              'can' => 'ver-periodos'
@@ -335,8 +335,15 @@ return [
             'can' => 'ver-usuarios'
         ],
         [
-            'text' => 'Diagnosticos',
+            'text' => 'Crear Diagnosticos',
             'url' => 'diagnosticos/create',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'crear-diagnosticos'
+        ],
+        [
+            'text' => 'Diagnosticos',
+            'url' => 'diagnosticos',
             'icon' => 'fas fa-users',
             'classes' => 'bd-blue text-white',
             'can' => 'ver-diagnosticos'
@@ -346,6 +353,7 @@ return [
             'url' => 'canalizaciones/create',
             'icon' => 'fas fa-users',
             'classes' => 'bd-blue text-white',
+            'can' => 'ver-canalizaciones'
         ],
         [
             'text' => 'Crear Tutorados',
@@ -395,7 +403,7 @@ return [
         ],
         [
             'text' => 'Asistencias',
-             'url' => 'asistencias/create',
+             'url' => 'asistencias',
              'icon' => 'fas fa-fw fa-cog',
              'classes' => 'bd-blue text-white',
              'can' => 'ver-asistencia'

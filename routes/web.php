@@ -15,7 +15,8 @@ use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\CanalizacionController;
-
+use App\Http\Controllers\PatController;
+use App\Http\Controllers\SemanaController;
 /*
 RUTA PRINCIPAL
 */
@@ -116,7 +117,6 @@ Route::middleware(['auth', 'role:admin,coordinador,docente'])->group(function ()
             'tutores' => 'tutor' 
         ]);
 
-    // perfil docente
     Route::get('mi-perfil', [TutorController::class, 'perfil'])
         ->name('tutores.perfil');
 
@@ -135,23 +135,79 @@ Route::middleware('auth')->group(function () {
         ->name('diagnosticos.responder');
 });
 
-/*
-GRUPOS y ASISTENCIAS
-*/
-Route::middleware(['auth'])->group(function () {
+// ===== GRUPOS =====
 
-    Route::resource('asistencias', AsistenciaController::class);
+Route::prefix('grupos')->group(function () {
 
+    // Listar todos los grupos
+    Route::get('/', [GrupoController::class, 'index'])->name('grupos.index');
+
+    // Formulario para crear un nuevo grupo
+    Route::get('/crear', [GrupoController::class, 'create'])->name('grupos.create');
+
+    // Guardar un nuevo grupo
+    Route::post('/crear', [GrupoController::class, 'store'])->name('grupos.store');
+
+    // Formulario para editar un grupo
+    Route::get('/{grupo}/editar', [GrupoController::class, 'edit'])->name('grupos.edit');
+
+    // Actualizar un grupo
+    Route::put('/{grupo}/editar', [GrupoController::class, 'update'])->name('grupos.update');
+
+    // Eliminar un grupo
+    Route::delete('/{grupo}', [GrupoController::class, 'destroy'])->name('grupos.destroy');
+
+    // Formulario para importar estudiantes a un grupo
+    Route::get('/{grupo}/importar', [GrupoController::class, 'formImportar'])->name('grupos.import.form');
+
+    // Procesar la importación de Excel
+    Route::post('/{grupo}/importar', [GrupoController::class, 'importarExcel'])->name('grupos.import.excel');
+
+    // Importar grupos desde Excel (opcional si manejas importación masiva de grupos)
+    Route::post('/importar-grupos', [GrupoController::class, 'import'])->name('grupos.import');
+});
+     
     Route::resource('grupos', GrupoController::class);
 
-    Route::get('grupos/{id}/agregar-estudiantes', [GrupoController::class, 'addStudents'])
-        ->name('grupos.addStudents');
 
-    Route::post('grupos/{id}/agregar-estudiantes', [GrupoController::class, 'storeStudents'])
-        ->name('grupos.storeStudents');
+    Route::get('grupos/{id}/agregar-estudiantes', [GrupoController::class, 'addStudents'])->name('grupos.addStudents');
 
-    Route::get('grupos/{grupo}/estudiantes', [AsistenciaController::class, 'estudiantesPorGrupo']);
+    Route::post('grupos/{id}/agregar-estudiantes', [GrupoController::class, 'storeStudents'])->name('grupos.storeStudents');
+
+    // Route::get('grupos/revisar', [App\Http\Controllers\GrupoController::class, 'revisar'])
+    // ->name('grupos.revisar')
+    // ->middleware('auth');
+
+    // Rutas de asistencias
+    Route::get('asistencias', [AsistenciaController::class, 'index'])->name('asistencias.index');
+    Route::get('asistencias/create', [AsistenciaController::class, 'create'])->name('asistencias.create');
+    Route::post('asistencias', [AsistenciaController::class, 'store'])->name('asistencias.store');
+    Route::get('asistencias/{asistencia}/edit', [AsistenciaController::class, 'edit'])->name('asistencias.edit');
+    Route::put('asistencias/{asistencia}', [AsistenciaController::class, 'update'])->name('asistencias.update');
+    Route::delete('asistencias/{asistencia}', [AsistenciaController::class, 'destroy'])->name('asistencias.destroy');
+
+    // IMPORTANTE: Esta ruta debe ir ANTES de la ruta con parámetro {asistencia}
+    Route::get('asistencias/estudiantes/{grupo}', [AsistenciaController::class, 'getEstudiantesByGrupo'])
+        ->name('asistencias.getEstudiantesByGrupo');
+
+    Route::get('asistencias/malla/{grupo}', [AsistenciaController::class, 'malla'])->name('asistencias.malla');
+
+    // Rutas para reportes
+    Route::get('/asistencias/reporte', [AsistenciaController::class, 'reporte'])
+        ->name('asistencias.reporte');
+    Route::post('/asistencias/generar-reporte', [AsistenciaController::class, 'generarReporte'])
+        ->name('asistencias.generar-reporte');
+    Route::get('asistencias/historial/{estudiante}', [AsistenciaController::class, 'historial'])
+        ->name('asistencias.historial');
+
+/*
+PERIODOS
+*/
+Route::middleware(['auth','role:admin,coordinador'])->group(function () {
+    Route::resource('periodos', PeriodoController::class);
+    Route::resource('tutorados', TutoradoController::class);
 });
+
 
 /*
 CANALIZACIONES
@@ -159,4 +215,15 @@ CANALIZACIONES
 Route::middleware('auth')->group(function () {
 
     Route::resource('canalizaciones', CanalizacionController::class);
+});
+
+/*
+PATS
+*/
+Route::middleware(['auth', 'role:admin,coordinador,docente'])->group(function () {
+    Route::resource('pats', PatController::class)->only([
+        'index', 'create', 'store', 'destroy'
+    ]);
+    Route::resource('semanas', SemanaController::class);
+
 });

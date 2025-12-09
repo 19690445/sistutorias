@@ -9,34 +9,31 @@
         @method('PUT')
     @endif
 
-    <!-- Clave del grupo -->
+   
     <div class="mb-3">
         <label for="clave_grupo" class="form-label">Clave del Grupo</label>
         <input type="text" name="clave_grupo" id="clave_grupo" class="form-control" 
             value="{{ old('clave_grupo', $grupo->clave_grupo ?? '') }}" required>
     </div>
 
-    <!-- Nombre del grupo -->
+    
     <div class="mb-3">
         <label for="nombre_grupo" class="form-label">Nombre del Grupo</label>
         <input type="text" name="nombre_grupo" id="nombre_grupo" class="form-control" 
             value="{{ old('nombre_grupo', $grupo->nombre_grupo ?? '') }}" required>
     </div>
 
-   <!-- Periodo -->
-    <div class="mb-3">
-        <label for="periodo_id" class="form-label">Periodo</label>
-        <select name="periodo_id" id="periodo_id" class="form-select" required>
-            <option value="">-- Seleccione --</option>
-            @foreach($periodos as $periodo)
-                <option value="{{ $periodo->id }}" {{ old('periodo_id', $grupo->periodo_id) == $periodo->id ? 'selected' : '' }}>
-                    {{ $periodo->nombre_periodo }} ({{ $periodo->año_periodo }})
-                </option>
-            @endforeach
-        </select>
-    </div>
+  
+            <div class="col-md-4">
+                    <label for="periodo_id">Periodo</label>
+                    <select name="periodo_id" id="periodo_id" class="form-control" required>
+                        <option value="">Selecciona un periodo</option>
+                        @foreach($periodos as $periodo)
+                            <option value="{{ $periodo->id }}">{{ $periodo->nombre_periodo }}</option>
+                        @endforeach
+                    </select>
+            </div>
 
-    <!-- Tutor -->
     <div class="mb-3">
         <label for="tutor_id" class="form-label">Tutor</label>
         <select name="tutor_id" id="tutor_id" class="form-select" required>
@@ -50,7 +47,7 @@
         </select>
     </div>
 
-    <!-- Tutorados -->
+
     <div class="mb-3">
         <label for="tutorados" class="form-label">Tutorados</label>
         <select name="tutorados[]" id="tutorados" class="form-select" multiple required>
@@ -63,21 +60,21 @@
         </select>
     </div>
 
-    <!-- Carrera -->
+    
     <div class="mb-3">
         <label for="carrera" class="form-label">Carrera</label>
         <input type="text" name="carrera" id="carrera" class="form-control" 
             value="{{ old('carrera', $grupo->carrera ?? '') }}" required>
     </div>
 
-    <!-- Semestre -->
+   
     <div class="mb-3">
         <label for="semestre" class="form-label">Semestre</label>
         <input type="number" name="semestre" id="semestre" class="form-control" 
             value="{{ old('semestre', $grupo->semestre ?? '') }}" min="1" required>
     </div>
 
-    <!-- Modalidad -->
+  
     <div class="mb-3">
         <label for="modalidad" class="form-label">Modalidad</label>
         <select name="modalidad" id="modalidad" class="form-select" required>
@@ -93,7 +90,7 @@
         </select>
     </div>
 
-    <!-- Turno -->
+    
     <div class="mb-3">
         <label for="turno" class="form-label">Turno</label>
         <select name="turno" id="turno" class="form-select" required>

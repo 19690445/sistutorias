@@ -1,31 +1,45 @@
 @extends('adminlte::page')
 
-@section('title', 'Ver Grupo')
+@section('title', 'Estudiantes del Grupo')
 
 @section('content_header')
-    <h1>Grupo: {{ $grupo->nombre_grupo }}</h1>
+    <h1>Estudiantes del Grupo: {{ $grupo->nombre_grupo }}</h1>
 @stop
 
 @section('content')
-    <div class="card">
-        <div class="card-body">
-            <p><strong>Clave:</strong> {{ $grupo->clave_grupo }}</p>
-            <p><strong>Tutor:</strong> {{ $grupo->tutor->nombre ?? '' }}</p>
-            <p><strong>Periodo:</strong> {{ $grupo->periodo->nombre ?? '' }}</p>
-            <p><strong>Carrera:</strong> {{ $grupo->carrera }}</p>
-            <p><strong>Semestre:</strong> {{ $grupo->semestre }}</p>
-            <p><strong>Aula:</strong> {{ $grupo->aula }}</p>
-            <p><strong>Horario:</strong> {{ $grupo->horario }}</p>
-            <p><strong>Capacidad:</strong> {{ $grupo->capacidad_salon }}</p>
-            <p><strong>Modalidad:</strong> {{ $grupo->modalidad }}</p>
-            <p><strong>Turno:</strong> {{ $grupo->turno }}</p>
-
-            <h3>Estudiantes</h3>
-            <ul>
-                @foreach($grupo->estudiantes as $estudiante)
-                    <li>{{ $estudiante->nombre }}</li>
-                @endforeach
-            </ul>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <a href="{{ route('grupos.index') }}" class="btn btn-secondary btn-sm">
+            ← Volver
+        </a>
     </div>
+    <div class="card-body">
+        @if($grupo->estudiantes->count() > 0)
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Semestre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($grupo->estudiantes as $estudiante)
+                        <tr>
+                            <td>{{ $estudiante->matricula }}</td>
+                            <td>{{ $estudiante->nombre }} {{ $estudiante->apellidos }}</td>
+                            <td>{{ $estudiante->correo_institucional }}</td>
+                            <td>{{ $estudiante->semestre }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <div class="alert alert-warning">
+                No hay estudiantes registrados en este grupo.
+            </div>
+        @endif
+    </div>
+</div>
 @stop
