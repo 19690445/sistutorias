@@ -42,6 +42,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasRole(["admin", "coordinador", "docente"]);
         });
 
+        Gate::define("ver-individuales", function ($user) {
+            return $user->hasRole(["admin", "coordinador", "docente"]);
+        });
+
         Gate::define("ver-asistencia", function ($user) {
             return $user->hasRole(["admin", "coordinador", "docente"]);
         });
@@ -55,7 +59,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
          Gate::define("ver-canalizaciones", function ($user) {
-            return $user->hasRole(["admin", "coordinador", "docente"]);
+            return $user->hasRole(["admin", "coordinador", "docente", ]);
         });
 
         Gate::define("ver-pats", function ($user) {

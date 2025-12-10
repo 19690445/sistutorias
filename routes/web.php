@@ -17,6 +17,9 @@ use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\CanalizacionController;
 use App\Http\Controllers\PatController;
 use App\Http\Controllers\SemanaController;
+use App\Http\Controllers\IndividualController;
+use App\Http\Controllers\EstudianteController;
+
 
 /*
 RUTA PRINCIPAL
@@ -217,10 +220,25 @@ Route::middleware(['auth','role:admin,coordinador'])->group(function () {
 /*
 CANALIZACIONES
 */
-Route::middleware('auth')->group(function () {
-
+  
+    // Individuales
+    Route::resource('individuales', IndividualController::class);
+    
+    // Canalizaciones
     Route::resource('canalizaciones', CanalizacionController::class);
-});
+    Route::get('/canalizaciones/create/{individual?}', [CanalizacionController::class, 'create'])
+    ->name('canalizaciones.create');
+
+
+    // Verifica que tienes las rutas correctamente definidas
+    Route::get('canalizaciones/{canalizacione}', [CanalizacionController::class, 'show'])
+    ->name('canalizaciones.show');  
+    
+    // Ruta adicional para verificación AJAX
+    Route::post('/individuales/verificar', [IndividualController::class, 'verificar'])
+        ->name('individuales.verificar');
+
+     
 
 /*
 PATS

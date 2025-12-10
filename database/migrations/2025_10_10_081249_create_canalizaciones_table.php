@@ -15,15 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('individuales_id')->constrained('individuales')->onDelete('cascade');
             $table->enum('tipo_atencion', [
-                'servicios psicologicos',
-                'servicios de salud',
-                'adicciones',
-                'beca manutencion',
-                'beca transporte',
-                'beca alimentacion',
-                'asesoria academica',
-                'asesoria procesos academicos/administrativos',
-                'aptitudes sobresalientes'
+                'Asesoria Individual',
+                'Salud y hábitos alimenticios',
+                'Consumo de substancias tóxicas',
+                'Problemas emocionales',
+                'Problemas familiares',
+                'Problemas académicos',
+                'Manejo de sexualidad y relaciones de pareja',
+                'Otros (especifique)',
             ]);
             $table->text('causa_problema')->nullable();
             $table->text('acciones_sugeridas')->nullable();

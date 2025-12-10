@@ -27,7 +27,15 @@ class Estudiante extends Model
     {
         return $this->hasMany(Asistencia::class, 'estudiantes_id');
     }
+
+    public function individuales()
+    {
+        return $this->hasMany(Individual::class);
+    }
+    
 }
+    
+
 
 
 

@@ -336,14 +336,6 @@ return [
         ],
 
         [
-            'text' => 'Canalizaciones',
-            'url' => 'canalizaciones/create',
-            'icon' => 'fas fa-users',
-            'classes' => 'bd-blue text-white',
-            'can' => 'ver-canalizaciones'
-        ],
-
-        [
             'text' => 'Crear Tutorados',
             'url' => 'admin/tutorados/create',
             'icon' => 'fas fa-users-line',
@@ -410,6 +402,22 @@ return [
             'icon' => 'fas fa-users',
             'classes' => 'bd-blue text-white',
             'can' => 'ver-diagnosticos'
+        ],
+
+        [
+            'text' => 'Individuales',
+            'url' => 'individuales',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'ver-individuales'
+        ],
+        [
+            'text' => 'Canalizaciones',
+            'url' => 'canalizaciones',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'ver-canalizaciones'
+            
         ],
 
         [
