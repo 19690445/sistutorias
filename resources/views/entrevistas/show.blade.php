@@ -33,6 +33,7 @@
 
 <div class="mt-3">
     <a href="{{ route('entrevistas.index') }}" class="btn btn-secondary">Volver</a>
-    
+    <a href="{{ route('entrevistas.pdf', $form->id) }}" class="btn btn-danger">Descargar PDF</a>
+</div>
 
 @stop

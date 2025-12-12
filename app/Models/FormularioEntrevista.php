@@ -79,4 +79,3 @@ class FormularioEntrevista extends Model
         return self::where('user_id', $userId)->exists();
     }
 }
-

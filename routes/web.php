@@ -259,8 +259,13 @@ ENTREVISTA INDIVIDUAL
 
 Route::middleware(['auth'])->group(function () {
 
- 
+    // CRUD completo para admin, coordinador y docente
     Route::resource('entrevistas', FormularioEntrevistaController::class);
+
+    // PDF (visible para roles permitidos y tutorado solo su propio PDF)
+    Route::get('entrevistas/{id}/pdf', 
+        [FormularioEntrevistaController::class, 'descargarPDF']
+    )->name('entrevistas.pdf');
 
 });
 

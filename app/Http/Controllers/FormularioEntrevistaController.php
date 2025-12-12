@@ -205,4 +205,17 @@ class FormularioEntrevistaController extends Controller
     return redirect()->route('mis-entrevistas')->with('success', 'Formulario guardado correctamente.');
 }
 
+public function responder($id)
+{
+    $entrevista = FormularioEntrevista::findOrFail($id);
+
+
+    if ($entrevista->respondida) {
+        return redirect()->route('mis-entrevistas')
+                         ->with('error', 'Esta entrevista ya fue respondida y no puede editarse nuevamente.');
+    }
+
+    return view('entrevistas.responder', compact('entrevista'));
+}
+
 }
