@@ -19,6 +19,8 @@ use App\Http\Controllers\PatController;
 use App\Http\Controllers\SemanaController;
 use App\Http\Controllers\IndividualController;
 use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\FormularioEntrevistaController;
+use App\Http\Controllers\IndicadorController;
 
 
 /*
@@ -136,7 +138,7 @@ Route::middleware(['auth', 'role:admin,coordinador,docente'])->group(function ()
     Route::get('diagnosticos/{diagnostico}/detalles', [DiagnosticoController::class, 'detalles'])->name('diagnosticos.detalles');
 
     /*
-    INDICADOPRES
+    INDICADO
     */
     Route::prefix('indicadores')->name('indicadores.')->group(function () {
     Route::get('/{indicador}/edit', [IndicadorController::class, 'edit'])->name('edit');
@@ -239,15 +241,45 @@ CANALIZACIONES
         ->name('individuales.verificar');
 
      
-
 /*
 PATS
 */
 
-Route::get('/pats', [PATController::class, 'index'])->name('pats.index');
-Route::get('/pats/create', [PATController::class, 'create'])->name('pats.create');
-Route::post('/pats', [PATController::class, 'store'])->name('pats.store');
-Route::get('/pats/{pat}/edit', [PATController::class, 'edit'])->name('pats.edit');
-Route::put('/pats/{pat}', [PATController::class, 'update'])->name('pats.update');
-Route::delete('/pats/{pat}', [PATController::class, 'destroy'])->name('pats.destroy');
-Route::get('/pats/dashboard', [PATController::class, 'dashboard'])->name('pats.dashboard');
+    Route::get('/pats', [PatController::class, 'index'])->name('pats.index');
+    Route::get('/pats/create', [PatController::class, 'create'])->name('pats.create');
+    Route::post('/pats', [PatController::class, 'store'])->name('pats.store');
+    Route::get('/pats/{pat}/edit', [PatController::class, 'edit'])->name('pats.edit');
+    Route::put('/pats/{pat}', [PatController::class, 'update'])->name('pats.update');
+    Route::delete('/pats/{pat}', [PatController::class, 'destroy'])->name('pats.destroy');
+    Route::get('/pats/dashboard', [PatController::class, 'dashboard'])->name('pats.dashboard');
+
+/*
+ENTREVISTA INDIVIDUAL
+*/
+
+Route::middleware(['auth'])->group(function () {
+
+ 
+    Route::resource('entrevistas', FormularioEntrevistaController::class);
+
+});
+
+/* RUTAS PARA TUTORADO */
+Route::middleware(['auth'])->group(function () {
+
+    // Mostrar las entrevistas del tutorado
+    Route::get('/mis-entrevistas', 
+        [FormularioEntrevistaController::class, 'misEntrevistas']
+    )->name('mis-entrevistas');
+
+    // Mostrar el formulario para responder una entrevista
+    Route::get('/mis-entrevistas/responder', 
+        [FormularioEntrevistaController::class, 'crearComoTutorado']
+    )->name('entrevistas.tutorado.create');
+
+    // Guardar la respuesta de la entrevista
+    Route::post('/mis-entrevistas/responder', 
+        [FormularioEntrevistaController::class, 'guardarComoTutorado']
+    )->name('entrevistas.tutorado.store');
+});
+

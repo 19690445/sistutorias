@@ -113,8 +113,9 @@ class DiagnosticoController extends Controller
         return view('diagnosticos.edit', compact('diagnostico', 'grupos', 'periodos'));
     }
 
-    public function update(Request $request, $id)
+   public function update(Request $request, $id)
     {
+      
         $request->validate([
             'grupos_id' => 'required|exists:grupos,id',
             'periodo_id' => 'required|exists:periodo,id',
@@ -124,10 +125,20 @@ class DiagnosticoController extends Controller
             'fecha_realizacion' => 'nullable|date',
             'estado' => 'required|in:pendiente,en_proceso,completado',
             'observaciones' => 'nullable|string',
+            'indicadores' => 'nullable|array',
+            'indicadores.*.id' => 'nullable|exists:indicadores,id',
+            'indicadores.*.indicador' => 'required_with:indicadores|string',
+            'indicadores.*.indicador_otro' => 'nullable|string',
+            'indicadores.*.presencia' => 'nullable|in:0,1',
+            'indicadores.*.causa' => 'nullable|string',
         ]);
 
         try {
-            $diagnostico = Diagnostico::findOrFail($id);
+            
+            \DB::beginTransaction();
+            
+          
+            $diagnostico = Diagnostico::with('indicadores')->findOrFail($id);
             
             $diagnostico->update([
                 'grupos_id' => $request->grupos_id,
@@ -140,12 +151,74 @@ class DiagnosticoController extends Controller
                 'observaciones' => $request->observaciones,
             ]);
 
+            
+            if ($request->has('indicadores') && is_array($request->indicadores)) {
+                $indicadoresIds = [];
+                
+                foreach ($request->indicadores as $indicadorData) {
+                  
+                    $nombreIndicador = $indicadorData['indicador'];
+                    if ($nombreIndicador === 'OTRO' && isset($indicadorData['indicador_otro'])) {
+                        $nombreIndicador = $indicadorData['indicador_otro'];
+                    }
+                    
+                   
+                    $tienePresencia = isset($indicadorData['presencia']) && $indicadorData['presencia'] == '1';
+                    
+                   
+                    if (isset($indicadorData['id']) && !empty($indicadorData['id'])) {
+                        $indicador = Indicador::find($indicadorData['id']);
+                        
+                        if ($indicador) {
+                            $indicador->update([
+                                'descripcion' => $nombreIndicador,
+                                'causa' => $indicadorData['causa'] ?? null,
+                                'estado' => $tienePresencia ? 'pendiente' : 'no_aplica',
+                                'notas' => $tienePresencia ? 'Indicador con presencia SI' : 'Indicador sin presencia',
+                            ]);
+                            
+                            $indicadoresIds[] = $indicador->id;
+                        }
+                    } else {
+                      
+                        $nuevoIndicador = Indicador::create([
+                            'diagnosticos_id' => $diagnostico->id,
+                            'descripcion' => $nombreIndicador,
+                            'causa' => $indicadorData['causa'] ?? null,
+                            'clave_indicadora' => 'IND-' . strtoupper(substr(md5($nombreIndicador), 0, 6)),
+                            'meta' => 'Resolver la problemática',
+                            'fecha_registro' => now(),
+                            'estado' => $tienePresencia ? 'pendiente' : 'no_aplica',
+                            'notas' => $tienePresencia ? 'Indicador con presencia SI' : 'Indicador sin presencia',
+                        ]);
+                        
+                        $indicadoresIds[] = $nuevoIndicador->id;
+                    }
+                }
+                
+                
+                if (!empty($indicadoresIds)) {
+                    $diagnostico->indicadores()
+                        ->whereNotIn('id', $indicadoresIds)
+                        ->delete();
+                }
+            } else {
+               
+                $diagnostico->indicadores()->delete();
+            }
+
+          
+            \DB::commit();
+
             return redirect()->route('diagnosticos.index')
                 ->with('success', 'Diagnóstico actualizado exitosamente.');
                 
         } catch (\Exception $e) {
+            
+            \DB::rollBack();
+            
             return back()->with('error', 'Error al actualizar el diagnóstico: ' . $e->getMessage())
-                         ->withInput();
+                        ->withInput();
         }
     }
 
@@ -164,5 +237,4 @@ class DiagnosticoController extends Controller
         }
     }
 
-    
 }

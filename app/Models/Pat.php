@@ -37,6 +37,7 @@ class PAT extends Model
         return $this->belongsTo(Periodo::class, 'periodo_id');
     }
     
+    
     public function getSemanasRealesArrayAttribute()
     {
         if (empty($this->semana_real)) {

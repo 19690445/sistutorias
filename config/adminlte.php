@@ -321,6 +321,22 @@ return [
             'can' => 'perfil-estudiante'
         ],
         [
+            'text' => 'Formulario',
+            'url' => 'mis-entrevistas',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'formulario'
+            
+        ],
+        [
+            'text' => 'Responder Formulario',
+            'url' => 'mis-entrevistas/responder',
+            'icon' => 'fas fa-users',
+            'classes' => 'bd-blue text-white',
+            'can' => 'responder'
+            
+        ],
+        [
             'text' => 'Periodos',
              'url' => 'periodos',
              'icon' => 'fas fa-fw fa-cog',
@@ -418,6 +434,13 @@ return [
             'classes' => 'bd-blue text-white',
             'can' => 'ver-canalizaciones'
             
+        ],
+        [
+            'text' => 'Entrevistas',
+             'url' => 'entrevistas',
+             'icon' => 'fas fa-fw fa-cog',
+             'classes' => 'bd-blue text-white',
+             'can' => 'ver-entrevista'
         ],
 
         [

@@ -33,6 +33,11 @@ class Estudiante extends Model
         return $this->hasMany(Individual::class);
     }
     
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id'); 
+    }
+
 }
     
 

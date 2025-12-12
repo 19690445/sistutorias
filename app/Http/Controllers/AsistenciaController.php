@@ -7,20 +7,89 @@ use App\Models\Grupo;
 use App\Models\Estudiante;
 use App\Models\Tutor;
 use App\Models\Periodo;
+use App\Models\User; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AsistenciaController extends Controller
 {
-    public function index()
-    {
-        $asistencias = Asistencia::with(['tutor', 'estudiante', 'grupo', 'periodo'])
-            ->orderBy('fecha', 'desc')
-            ->orderBy('sesion', 'desc')
-            ->paginate(20);
-        
-        return view('asistencias.index', compact('asistencias'));
+    public function index(Request $request)
+{
+    $query = Asistencia::with(['tutor', 'estudiante', 'grupo', 'periodo']);
+    
+    
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->whereHas('tutor', function($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                  ->orWhere('apellido', 'like', "%{$search}%");
+            })
+            ->orWhereHas('estudiante', function($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                  ->orWhere('apellido', 'like', "%{$search}%")
+                  ->orWhere('matricula', 'like', "%{$search}%");
+            })
+            ->orWhereHas('grupo', function($q) use ($search) {
+                $q->where('nombre_grupo', 'like', "%{$search}%")
+                  ->orWhere('clave_grupo', 'like', "%{$search}%");
+            });
+        });
     }
+    
+  
+    if ($request->filled('estado')) {
+        $query->where('estado', $request->estado);
+    }
+    
+   
+    if ($request->filled('grupo_id')) {
+        $query->where('grupo_id', $request->grupo_id);
+    }
+    
+    
+    if ($request->filled('tutor_id')) {
+        $query->where('tutores_id', $request->tutor_id);
+    }
+    
+    
+    if ($request->filled('fecha_desde') && $request->filled('fecha_hasta')) {
+        $query->whereBetween('fecha', [
+            $request->fecha_desde,
+            $request->fecha_hasta
+        ]);
+    } elseif ($request->filled('fecha_desde')) {
+        $query->where('fecha', '>=', $request->fecha_desde);
+    } elseif ($request->filled('fecha_hasta')) {
+        $query->where('fecha', '<=', $request->fecha_hasta);
+    }
+    
+    
+    $grupos = Grupo::orderBy('nombre_grupo')->get();
+    $tutores = Tutor::orderBy('nombre')->get();
+    
+   
+    $totalAsistencias = Asistencia::count();
+    $presentes = Asistencia::where('estado', 'si')->count();
+    $ausentes = Asistencia::where('estado', 'no')->count();
+    $porcentajeAsistencia = $totalAsistencias > 0 ? round(($presentes / $totalAsistencias) * 100, 1) : 0;
+    
+    
+    $asistencias = $query->orderBy('fecha', 'desc')
+                        ->orderBy('sesion', 'desc')
+                        ->paginate(20)
+                        ->withQueryString();
+    
+    return view('asistencias.index', compact(
+        'asistencias',
+        'grupos',
+        'tutores',
+        'totalAsistencias',
+        'presentes',
+        'ausentes',
+        'porcentajeAsistencia'
+    ));
+}
 
     public function create()
     {
@@ -30,7 +99,7 @@ class AsistenciaController extends Controller
         
         return view('asistencias.create', compact('tutores', 'periodos', 'grupos'));
     }
-
+            
     public function malla($grupoId)
     {
         $grupo = Grupo::findOrFail($grupoId);
@@ -74,7 +143,7 @@ class AsistenciaController extends Controller
         DB::beginTransaction();
         
         try {
-          
+         
             $existe = Asistencia::where('grupo_id', $request->grupo_id)
                 ->where('periodo_id', $request->periodo_id)
                 ->where('sesion', $request->sesion)
@@ -84,6 +153,7 @@ class AsistenciaController extends Controller
             if ($existe) {
                 return back()->with('error', 'Ya existe registro de asistencia para esta sesión y fecha.');
             }
+            
             
             foreach ($request->estudiantes as $estudianteData) {
                 Asistencia::create([
@@ -152,13 +222,13 @@ class AsistenciaController extends Controller
 
     public function historial($estudianteId)
     {
-    $estudiante = Estudiante::with(['asistencias' => function($query) {
-        $query->orderBy('fecha', 'desc')
-              ->orderBy('sesion', 'desc');
-    }, 'asistencias.tutor', 'asistencias.periodo', 'asistencias.grupo'])
-    ->findOrFail($estudianteId);
+        $estudiante = Estudiante::with(['asistencias' => function($query) {
+            $query->orderBy('fecha', 'desc')
+                  ->orderBy('sesion', 'desc');
+        }, 'asistencias.tutor', 'asistencias.periodo', 'asistencias.grupo'])
+        ->findOrFail($estudianteId);
 
-    return view('asistencias.partials.historial', compact('estudiante'));
+        return view('asistencias.partials.historial', compact('estudiante'));
     }
 
     public function generarReporte(Request $request)

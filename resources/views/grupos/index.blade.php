@@ -41,23 +41,28 @@
                             <td>{{ ucfirst($grupo->modalidad) }}</td>
                             <td>{{ ucfirst($grupo->turno) }}</td>
                             <td>
-                                <a href="{{ route('grupos.edit', $grupo->id) }}" class="btn btn-sm btn-warning">Editar</a>
-
-                                <form action="{{ route('grupos.destroy', $grupo->id) }}" method="POST" style="display:inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                            onclick="return confirm('¿Está seguro de eliminar este grupo?')">Eliminar</button>
-                                </form>
-                                    <a href="{{ route('grupos.import.form', $grupo->id) }}" class="btn btn-success">
-                                    <i class="fas fa-file-excel"></i> Importar Excel
+                                <div class="d-flex gap-1">
+                                    <a href="{{ route('grupos.show', $grupo->id) }}" class="btn btn-sm btn-info" title="Ver">
+                                        <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('grupos.show', $grupo->id) }}" class="btn btn-sm btn-info">
-    Ver estudiantes
-</a>
-
-                                    <a href="{{ route('tutorados.create', ['grupo_id' => $grupo->id]) }}" 
-                                   class="btn btn-sm btn-info">Agregar Tutorado</a>
+                                    <a href="{{ route('tutorados.create', ['grupo_id' => $grupo->id]) }}" class="btn btn-sm btn-success" title="Agregar">
+                                        <i class="fas fa-user-plus"></i>
+                                    </a>
+                                    <a href="{{ route('grupos.import.form', $grupo->id) }}" class="btn btn-sm btn-secondary" title="Importar">
+                                        <i class="fas fa-file-excel"></i>
+                                    </a>
+                                    <a href="{{ route('grupos.edit', $grupo->id) }}" class="btn btn-sm btn-warning" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('grupos.destroy', $grupo->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Eliminar"
+                                                onclick="return confirm('¿Eliminar?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

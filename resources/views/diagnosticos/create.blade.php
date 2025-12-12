@@ -4,7 +4,7 @@
 
 @section('content_header')
     <h1>DIAGNOSTICO GRUPAL</h1>
-    <p>Registro de diagnóstico y sus indicadores</p>
+    <p>Registro de diagnóstico e indicadores</p>
 @stop
 
 @section('content')
@@ -97,7 +97,7 @@
                                         <td>1</td>
                                         <td>
                                             <select name="indicadores[0][indicador]" class="form-control form-control-sm indicador-select" required>
-                                                <option value="">Seleccionar indicador</option>
+                                                <option value=>Seleccionar indicador</option>
                                                 <option value="Inadaptación al Medio Académico">Inadaptación al Medio Académico</option>
                                                 <option value="Problemas de salud">Problemas de salud</option>
                                                 <option value="Problemas Vocacionales">Problemas Vocacionales</option>
@@ -125,7 +125,7 @@
                                         </td>
                                         <td>
                                             <textarea name="indicadores[0][causa]" class="form-control form-control-sm" 
-                                                      rows="1" placeholder="Describa la causa..."></textarea>
+                                                      rows="1" placeholder="Describa la causa"></textarea>
                                         </td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-danger btn-sm btn-eliminar" disabled>

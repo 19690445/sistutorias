@@ -38,7 +38,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="grupo_id">Grupo</label>
-                            <select name="grupo_id" id="grupo_id" class="form-control select2" required
+                            <select name="grupos_id" id="grupos_id" class="form-control select2" required>
                                     {{ $grupos->isEmpty() ? 'disabled' : '' }}>
                                 <option value="">Seleccione un grupo</option>
                                 @foreach($grupos as $grupo)
