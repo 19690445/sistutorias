@@ -11,29 +11,47 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\EstudiantesImport;
-use App\Imports\GruposImport;
 use Illuminate\Validation\Rules\File;
-use Illuminate\Validation\Rule;
 
 class GrupoController extends Controller
 {
- 
     public function index()
     {
-        $grupos = Grupo::all();
+        $user = auth()->user();
+
+        if ($user->rol_id == 3) {
+        
+            $grupos = Grupo::whereHas('tutor', function($query) use ($user) {
+                $query->where('users_id', $user->id);
+            })->get();
+        } else {
+           
+            $grupos = Grupo::all();
+        }
+
         return view('grupos.index', compact('grupos'));
     }
 
     public function create()
     {
+        $user = auth()->user();
+        if (!in_array($user->rol_id, [1,2])) {
+            abort(403, 'No tienes permiso para crear grupos.');
+        }
+
         $tutores = Tutor::all();
         $periodos = Periodo::all();
         return view('grupos.create', compact('tutores', 'periodos'));
     }
 
+    
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if (!in_array($user->rol_id, [1,2])) {
+            abort(403, 'No tienes permiso para crear grupos.');
+        }
+
         $request->validate([
             'clave_grupo' => 'required|string|max:20|unique:grupos,clave_grupo',
             'nombre_grupo' => 'required|string|max:100',
@@ -51,9 +69,12 @@ class GrupoController extends Controller
             ->with('success', 'Grupo creado correctamente');
     }
 
+
     public function edit($id)
     {
         $grupo = Grupo::findOrFail($id);
+        $this->authorizeGrupo($grupo, 'editar');
+
         $tutores = Tutor::all();
         $periodos = Periodo::all();
         return view('grupos.edit', compact('grupo', 'tutores', 'periodos'));
@@ -61,6 +82,9 @@ class GrupoController extends Controller
 
     public function update(Request $request, $id)
     {
+        $grupo = Grupo::findOrFail($id);
+        $this->authorizeGrupo($grupo, 'editar');
+
         $request->validate([
             'clave_grupo' => 'required|string|max:20|unique:grupos,clave_grupo,' . $id,
             'nombre_grupo' => 'required|string|max:100',
@@ -72,7 +96,6 @@ class GrupoController extends Controller
             'turno' => 'required|in:matutino,intermedio,vespertino',
         ]);
 
-        $grupo = Grupo::findOrFail($id);
         $grupo->update($request->all());
 
         return redirect()->route('grupos.index')
@@ -82,114 +105,100 @@ class GrupoController extends Controller
     public function destroy($id)
     {
         $grupo = Grupo::findOrFail($id);
+        $this->authorizeGrupo($grupo, 'eliminar');
+
         $grupo->delete();
 
         return redirect()->route('grupos.index')
             ->with('success', 'Grupo eliminado correctamente.');
     }
 
-    public function formImportar($grupoId)
-    {
-        $grupo = Grupo::findOrFail($grupoId);
-        return view('grupos.importar', compact('grupo'));
-    }
-
-    public function importarExcel(Request $request, $grupoId)
-{
-    $request->validate([
-        'archivo' => ['required', File::types(['csv', 'xls', 'xlsx'])],
-    ]);
-
-    $grupo = Grupo::findOrFail($grupoId);
-
-    try {
-        $data = Excel::toArray([], $request->file('archivo'))[0];
-        #dd($data);
-        $expectedHeaders = ['matricula', 'nombre', 'apellidos','curp','fecha_nacimiento','genero','correo_institucional','telefono_celular','domicilio','carrera','semestre','estado'];
-
-        $headers = array_map('strtolower', $data[0]);
-
-        foreach ($expectedHeaders as $expectedHeader) {
-            if (!in_array($expectedHeader, $headers)) {
-                return back()->with('error', "Falta la columna: $expectedHeader");
-            }
-        }
-
-        DB::beginTransaction();
-
-        foreach (array_slice($data, 1) as $row) {
-
-         
-            if (count(array_filter($row)) == 0) continue;
-
-            if (count($row) < 11) continue;
-
-            [$matricula, $nombre, $apellidos, $curp, $fechanacimiento, $genero, $email, $telefono, $domicilio, $carrera, $semestre, $estado, ] = $row;
-
-            if (!$email) continue;
-
-            #dump($row);
-
-            $user = User::firstOrCreate(
-                ['email' => $email],
-                [
-                    'name' => trim($nombre . ' ' . $apellidos),
-                    'password' => Hash::make('12345678'),
-                    'rol' =>4,
-                ]
-            );
-            #dump($user);
-
-            $estudiante = Estudiante::updateOrCreate(
-                ['users_id' => $user->id],
-                [
-                    'matricula' => $matricula,
-                    'nombre' => $nombre,
-                    'apellidos' => $apellidos,
-                    'curp' => $curp,
-                    'fecha_nacimiento' => $fechanacimiento,
-                    'genero' => $genero,
-                    'grupo_id' => $grupoId,
-                    'correo_institucional' => $email,
-                    'telefono_celular' => $telefono,
-                    'domicilio' => $domicilio,
-                    'carrera' => $carrera,
-                    'semestre' => $semestre,
-                    'estado' => 'activo',
-                    
-                    
-                ]
-            );
-            
-            if($estudiante->isDirty()){
-                $estudiante->save();
-            }
-            #dump($estudiante, $domicilio, $estudiante->domicilio);
-
-            // foreach($expectedHeaders as $eh){
-            //     if($$eh != $estudiante->$eh){
-            //         dump($eh, $estudiante->id, $$eh, $estudiante->$eh);
-            //         dump("El estudiante tiene cambios", $estudiante->isDirty());
-            //    }
-            //}
-        }
-
-        DB::commit();
-        ##dd("ALTO");
-        return back()->with('success', 'Estudiantes importados correctamente.');
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        dd($e->getMessage());
-        return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
-    }
-}
-
-
     public function show($id)
     {
         $grupo = Grupo::with('estudiantes')->findOrFail($id);
+        $this->authorizeGrupo($grupo, 'ver');
+
         return view('grupos.show', compact('grupo'));
     }
 
+    public function formImportar($grupoId)
+    {
+        $grupo = Grupo::findOrFail($grupoId);
+        $this->authorizeGrupo($grupo, 'editar');
+
+        return view('grupos.importar', compact('grupo'));
+    }
+
+    
+    public function importarExcel(Request $request, $grupoId)
+    {
+        $grupo = Grupo::findOrFail($grupoId);
+        $this->authorizeGrupo($grupo, 'editar');
+
+        $request->validate([
+            'archivo' => ['required', File::types(['csv', 'xls', 'xlsx'])],
+        ]);
+
+        try {
+            $data = Excel::toArray([], $request->file('archivo'))[0];
+
+            foreach (array_slice($data, 1) as $row) {
+                [$matricula, $nombreCompleto, $materiaGrupo, $carrera] = $row;
+
+                if (!$matricula || !$nombreCompleto) continue;
+
+                $partes = explode(' ', $nombreCompleto, 2);
+                $nombre = trim($partes[0]);
+                $apellidos = isset($partes[1]) ? trim($partes[1]) : 'Sin Apellidos';
+
+                $correo = $matricula . '@tecvalles.mx';
+                $password = Hash::make('12345678');
+
+                $user = User::firstOrCreate(
+                    ['email' => $correo],
+                    [
+                        'name' => trim($nombre . ' ' . $apellidos),
+                        'password' => $password,
+                        'rol' => 4,
+                    ]
+                );
+
+                Estudiante::updateOrCreate(
+                    ['users_id' => $user->id],
+                    [
+                        'matricula' => $matricula,
+                        'nombre' => $nombre,
+                        'apellidos' => $apellidos,
+                        'carrera' => $carrera,
+                        'grupo_id' => $grupoId,
+                        'correo_institucional' => $correo,
+                        'estado' => 'activo',
+                    ]
+                );
+            }
+
+            return back()->with('success', 'Estudiantes importados correctamente.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
+    }
+
+   
+    private function authorizeGrupo(Grupo $grupo, $accion = 'ver')
+    {
+        $user = auth()->user();
+
+        if ($accion === 'ver') {
+          
+            if ($user->rol_id == 3 && (!$grupo->tutor || $grupo->tutor->users_id !== $user->id)) {
+                abort(403, 'No tienes permiso para ver este grupo.');
+            }
+        }
+
+        if (in_array($accion, ['editar', 'eliminar'])) {
+            if (!in_array($user->rol_id, [1,2])) {
+                abort(403, 'No tienes permiso para ' . $accion . ' este grupo.');
+            }
+        }
+    }
 }

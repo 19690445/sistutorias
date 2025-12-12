@@ -391,8 +391,22 @@ return [
         ],
 
         [
-            'text' => 'Crear Grupos',
+            'text' => 'Mis Grupos',
             'url' => 'grupos',
+            'icon' => 'fas fa-project-diagram',
+            'classes' => 'bd-blue text-white',
+            'can' => 'ver'
+        ],
+        [
+            'text' => 'Grupos',
+            'url' => 'grupos',
+            'icon' => 'fas fa-project-diagram',
+            'classes' => 'bd-blue text-white',
+            'can' => 'ver-grupos'
+        ],
+        [
+            'text' => 'Crear Grupo',
+            'url' => 'grupos/create',
             'icon' => 'fas fa-project-diagram',
             'classes' => 'bd-blue text-white',
             'can' => 'crear-grupos'

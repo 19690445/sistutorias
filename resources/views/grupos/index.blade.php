@@ -4,8 +4,6 @@
 
 @section('content_header')
     <h1>Grupos</h1>
-    <a href="{{ route('grupos.create') }}" class="btn btn-primary">Nuevo Grupo</a>
-    
 @stop
 
 @section('content')
@@ -42,26 +40,31 @@
                             <td>{{ ucfirst($grupo->turno) }}</td>
                             <td>
                                 <div class="d-flex gap-1">
+                                    <!-- Botón ver siempre visible -->
                                     <a href="{{ route('grupos.show', $grupo->id) }}" class="btn btn-sm btn-info" title="Ver">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('tutorados.create', ['grupo_id' => $grupo->id]) }}" class="btn btn-sm btn-success" title="Agregar">
-                                        <i class="fas fa-user-plus"></i>
-                                    </a>
-                                    <a href="{{ route('grupos.import.form', $grupo->id) }}" class="btn btn-sm btn-secondary" title="Importar">
-                                        <i class="fas fa-file-excel"></i>
-                                    </a>
-                                    <a href="{{ route('grupos.edit', $grupo->id) }}" class="btn btn-sm btn-warning" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('grupos.destroy', $grupo->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" title="Eliminar"
-                                                onclick="return confirm('¿Eliminar?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+
+                                    @if(auth()->user()->rol_id == 1 || auth()->user()->rol_id == 2)
+                                        <!-- Solo admin y coordinador pueden agregar, importar, editar y eliminar -->
+                                        <a href="{{ route('tutorados.create', ['grupo_id' => $grupo->id]) }}" class="btn btn-sm btn-success" title="Agregar">
+                                            <i class="fas fa-user-plus"></i>
+                                        </a>
+                                        <a href="{{ route('grupos.import.form', $grupo->id) }}" class="btn btn-sm btn-secondary" title="Importar">
+                                            <i class="fas fa-file-excel"></i>
+                                        </a>
+                                        <a href="{{ route('grupos.edit', $grupo->id) }}" class="btn btn-sm btn-warning" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('grupos.destroy', $grupo->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Eliminar"
+                                                    onclick="return confirm('¿Eliminar?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

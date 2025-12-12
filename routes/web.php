@@ -150,7 +150,7 @@ Route::middleware(['auth', 'role:admin,coordinador,docente'])->group(function ()
 
 Route::prefix('grupos')->group(function () {
 
-    // Listar todos los grupos
+    // Listar grupos
     Route::get('/', [GrupoController::class, 'index'])->name('grupos.index');
 
     // Formulario para crear un nuevo grupo
@@ -174,8 +174,9 @@ Route::prefix('grupos')->group(function () {
     // Procesar la importación de Excel
     Route::post('/{grupo}/importar', [GrupoController::class, 'importarExcel'])->name('grupos.import.excel');
 
-    // Importar grupos desde Excel (opcional si manejas importación masiva de grupos)
+    // Importar grupos desde Excel
     Route::post('/importar-grupos', [GrupoController::class, 'import'])->name('grupos.import');
+
 });
      
     Route::resource('grupos', GrupoController::class);
